@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>C++17 + Lua = Flexibility</title>
+
+		<link rel="stylesheet" href="/css/reset.css">
+		<link rel="stylesheet" href="/css/reveal.css">
+		<link rel="stylesheet" href="/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '/css/print/pdf.css' : '/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+        <section>
+          <h1>C++17 + Lua = Flexibility</h1>
+          <p>
+            <small>
+              James (Jim) Pascoe<br>
+              <a href="http://www.james-pascoe.com">http://james-pascoe.com</a><br>
+              <a href="http://github.com/jamespascoe">http://github.com/jamespascoe</a><p>
+              <a href="mailto:james@james-pascoe.com">james@james-pascoe.com</a><br>
+            </small>
+        </section>
+				<section>
+          <h2>Overview</h2>
+          <ul>
+            <span class="fragment"><li>Software Flexibility</li></span>
+            <span class="fragment"><li>High Speed Rail Example</li></span>
+            <span class="fragment"><li>How to Combine C++17 and Lua</li></span>
+            <span class="fragment"><li>Concurrency and Asynchrony</li></span>
+            <span class="fragment"><li>Profiling and Optimisation</li></span>
+          </ul>
+        </section>
+        <section>
+          <h2>Flexibility</h2>
+          <span class="fragment" style="color:yellow">What Does it Mean for Software to be Flexible?</span>
+          <p>
+          <ul>
+            <span class="fragment"><li>Portability (supports multiple platforms)</li></span>
+            <span class="fragment"><li>Evolves well over time</li></span>
+            <span class="fragment"><ul><li>programming vs. software engineering</li></ul></span>
+            <span class="fragment"><li>Easy to change (short turnaround time)</li></span>
+            <span class="fragment"><li>Behaviour is adaptable and dynamic</li></span>
+						<span class="fragment fade-in">
+            	<span class="fragment highlight-yellow"><li>Copes with the Unknown</li></span>
+						</span>
+          </ul>
+        </section>
+        <section>
+
+	<section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+          	<h1>Example</h1>
+					</section>
+
+					<section>
+						<h2><a href="http://bluwireless.com/">Blu Wireless</a></h2>
+						<ul>
+							<span class="fragment"><li>IP networking over 5G mmWave (60 GHz) modems</li></span>
+								<span class="fragment"><ul><li>802.11ad MAC + PHY (Hydra)</li></ul></span>
+							<span class="fragment"><li>Embedded ARM based Cavium (Marvell) NPUs</li></span>
+								<span class="fragment"><ul><li>High specification running Ubuntu 18.04</li></ul></span>
+							<span class="fragment"><li>Multi gigabit wireless links (up-to 1km)</li></span>
+								<span class="fragment"><ul><li>Mobile and Fixed Wireless Applications</ul></span>
+						</ul>
+					</section>
+
+					<section>
+            <h2><a href="http://bluwireless.com/transport/rail/">High Speed Rail</a></h2>
+						<ul>
+							<span class="fragment"><li>High-bandwidth, low latency Internet connectivity</li></span>
+							<span class="fragment"><ul><li>Connection must not drop in tunnels</ul></span>
+							<span class="fragment"><li>mmWave radios are mounted along the track-side</li></span>
+							<span class="fragment"><ul><li>10Gb fibers provide back-haul to the Internet</li></ul></span>
+							<span class="fragment"><li>mmWave radios are also mounted on the trains</li></span>
+							<span class="fragment"><ul><li>NPUs co-ordinate via on-board wired Ethernet</li></ul></span>
+						</ul>
+					</section>
+
+					<section>
+					<img class="stretch" data-src="media/devices.png" style="background:none; border:none; box-shadow:none;">
+					</section>
+
+					<section section data-background-video="media/BluWireless_Rail.mp4"></section>
+
+					<section>
+						<h2>Connection Manager</h2>
+						<ul>
+						  <span class="fragment fade-in">
+							  <span class="fragment highlight-yellow"><li>Critical software component</li></span>
+						  </span>
+						  <span class="fragment fade-in">
+							  <span class="fragment highlight-yellow"><li>Decides which radio to connect to and when</li></span>
+						  </span>
+							<span class="fragment"><li>v1.0 implements simple behaviour:</li></span>
+							<span class="fragment">
+								<ol>
+									<li>Scan for track-side access points (APs)</li>
+									<li>Connect to AP with the strongest signal</li>
+									<li>Wait for disconnection (and go back to 1)</li>
+								</ol>
+							</span>
+						</ul>
+					</section>
+
+					<section>
+					<img class="stretch" data-src="media/CMv1-Architecture.png" style="background:none; border:none; box-shadow:none;">
+					</section>
+
+
+
+
+
+				</section>
+
+			</div>
+		</div>
+
+		<script src="/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				controls: false,
+				totalTime: 5400,
+				hideInactiveCursor: true,
+				hideCursorTime: 2,
+        hideAddressBar: true,
+        preloadIframes: true,
+        progress: false,
+				dependencies: [
+					{ src: '/plugin/markdown/marked.js' },
+					{ src: '/plugin/markdown/markdown.js' },
+					{ src: '/plugin/highlight/highlight.js' },
+					{ src: '/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
