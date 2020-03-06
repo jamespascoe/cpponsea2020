@@ -156,13 +156,13 @@
 					<section>
 						<h2>LuaChat</h2>
 						<ul>
-              <span class="fragment"><li>Unix 'talk' program (written in C++ & Lua)</li></span>
-              <span class="fragment"><li>Available on <a href="http://www.github.com/jamespascoe/">GitHub</a> (MIT license)</li></span>
-              <span class="fragment"><li><a href="http://think-async.com/Asio/asio-1.12.2/doc/">Asio</a> for asynchronous TCP/UDP
-                                         communications, timers and POSIX signal handling</li></span>
-              <span class="fragment"><li><a href="https://github.com/gabime/spdlog">spdlog</a> for logging,
-                                         <a href="https://github.com/jarro2783/cxxopts">cxxopts</a> for command line processing and
-                                         <a href="https://cmake.org/cmake/help/latest/">CMake</a> for build generation</li></span>
+              <span><li>Unix 'talk' program (written in C++ & Lua)</li></span>
+              <span><li>Available on <a href="http://www.github.com/jamespascoe/">GitHub</a> (MIT license)</li></span>
+              <span><li><a href="http://think-async.com/Asio/asio-1.12.2/doc/">Asio</a> for asynchronous TCP/UDP
+                         communications, timers and POSIX signal handling</li></span>
+              <span><li><a href="https://github.com/gabime/spdlog">spdlog</a> for logging,
+                        <a href="https://github.com/jarro2783/cxxopts">cxxopts</a> for command line processing and
+                        <a href="https://cmake.org/cmake/help/latest/">CMake</a> for build generation</li></span>
             </ul>
           </section>
 
@@ -170,7 +170,7 @@
 						<h2>Build Instructions</h2>
             <p>
             Ubuntu 18.04 (Linux Mint 19):
-            <pre><code class="plaintext" data-trim data-noescape data-line-numbers="|2-3">
+            <pre><code class="plaintext" data-trim data-noescape data-line-numbers="">
 git clone https://github.com/jamespascoe/LuaChat.git
 sudo apt-get install lua5.3 luarocks swig
 sudo luarocks install luaposix
@@ -179,7 +179,7 @@ mkdir build; cd build; cmake ../LuaChat; make
             </code></pre>
             <p>
             MacOS (Catalina):
-            <pre><code class="plaintext" data-trim data-noescape data-line-numbers="|2">
+            <pre><code class="plaintext" data-trim data-noescape data-line-numbers="">
 git clone https://github.com/jamespascoe/LuaChat.git
 brew install lua luarocks swig
 luarocks install luaposix
@@ -189,10 +189,10 @@ mkdir build; cd build; cmake ../LuaChat; make
           </section>
 
 					<section>
-						<h2>The Lua Stack</h2>
+            <h2><a href="https://www.lua.org/manual/5.3/manual.html#4">The Lua Stack</a></h2>
             <ul>
-              <span class="fragment"><li>Lua communicates with C++ through an <a href="https://www.lua.org/manual/5.3/manual.html#4">API</a></li></span>
-              <span class="fragment"><li>Values are passed to/from Lua using stacks</li></span>
+              <span class="fragment"><li>Lua communicates with C++ through an API</li></span>
+              <span class="fragment"><li>Values are passed between Lua and C++ using stacks</li></span>
               <span class="fragment"><li>API functions do not enforce strict stack discipline</li></span>
               <span class="fragment"><ul><li>positive indices represent absolute positions</li></ul></span>
               <span class="fragment"><ul><li>negative indices are relative to the top of the stack</li></ul></span>
@@ -288,7 +288,7 @@ end
 
 					<section>
 						<h2>Simple Example: Build & Run</h2>
-              <pre style="width:100%"><code class="plaintext" data-trim data-noescape data-line-numbers="|1-2|3-7">
+              <pre style="width:100%"><code class="plaintext" data-trim data-noescape data-line-numbers="1-2|3-7">
 > clang++ -I/usr/include/lua5.3 -llua5.3 -o lua-cpp lua-cpp.cpp
 > ./lua-cpp lua-cpp.lua
 Lua: f called with args: how 1 14
@@ -298,6 +298,90 @@ how
 14
               </code></pre>
           </section>
+
+					<section>
+						<h2>LuaChat Arguments</h2>
+            <pre class="stretch"><code class="c++" style="width:103%" data-trim data-line-numbers="">
+void LuaManager::ProcessArguments(
+  std::vector&ltstd::string&gt const& arguments)
+{
+  lua_createtable(lua_state, 0, arguments.size());
+
+  using namespace std::regex_constants
+  std::regex number_regex(R"((\w+)=([-+]?[0-9]+\.?[0-9]*)$)");
+  std::regex bool_regex(R"((\w+)=(true|false))", icase);
+  std::regex string_regex(R"((\w+)=([[:graph:]]+))");
+
+  for (auto const& arg : arguments) {
+    std::smatch match;
+
+    try {
+      if (std::regex_search(arg, match, number_regex))
+        lua_pushnumber(lua_state, std::stod(match[2].str()));
+      else if (std::regex_search(arg, match, bool_regex))
+        lua_pushboolean(lua_state,
+          !strcasecmp(match[2].str().c_str(), "true")
+        );
+      else if (std::regex_search(arg, match, string_regex))
+        lua_pushstring(lua_state, match[2].str().c_str());
+      else
+        throw std::runtime_error("Could not parse arg: " + arg);
+    } catch (std::logic_error const& e) {
+      throw std::runtime_error("Exception converting Lua argument "
+                               + arg + ": " + e.what());
+    }
+
+    // Set the name of the key
+    lua_setfield(lua_state, -2, match[1].str().c_str());
+  }
+
+  // Store a reference to the table for when the behaviour is run
+  lua_ref_argument_table = luaL_ref(lua_state, LUA_REGISTRYINDEX);
+  if (lua_ref_argument_table == LUA_REFNIL)
+    throw std::runtime_error("Could not set Lua table reference");
+}
+              </code></pre>
+          </section>
+
+					<section>
+            <h2><a href="http://swig.org">SWIG</a></h2>
+            <ul>
+              <span class="fragment"><li>Simplified Wrapper and Interface Generator</li></span>
+              <span class="fragment"><li>Produces C++ bindings for many target languages</li></span>
+              <span class="fragment"><ul><li>Generates Lua stack calls for std C++ types</li></ul></span>
+              <span class="fragment"><ul><li>std::string, std::vector, std::map etc.</li></ul></span>
+              <span class="fragment"><li>Integrates well with CMake</li></span>
+            </ul>
+          </section>
+
+					<section>
+						<h2>LuaChat SWIG CMake</h2>
+            <pre class="stretch"><code class="CMake" data-trim data-line-numbers="|2|8">
+set(LUA_CHAT_SWIG_SRCS
+    lua_chat_actions.i lua_chat_action_log.cpp)
+
+set_source_files_properties(${LUA_CHAT_SWIG_SRCS}
+                            PROPERTIES CPLUSPLUS ON)
+
+swig_add_library(actions TYPE USE_BUILD_SHARED_LIBS
+                 LANGUAGE lua
+                 SOURCES ${LUA_CHAT_SWIG_SRCS})
+
+target_include_directories(actions PRIVATE
+                           ${CMAKE_CURRENT_SOURCE_DIR}
+                           ${LUA_CHAT_SOURCE_DIR}/src
+                           ${LUA_CHAT_SOURCE_DIR}/third_party
+                           ${LUA_CHAT_SOURCE_DIR}/third_party/asio
+                           ${LUA_INCLUDE_DIR})
+
+target_compile_definitions(actions PRIVATE ASIO_STANDALONE)
+
+target_link_libraries(actions PRIVATE std::filesystem)
+              </code></pre>
+          </section>
+
+
+
 
 
 
