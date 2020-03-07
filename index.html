@@ -172,7 +172,7 @@
             Ubuntu 18.04 (Linux Mint 19):
             <pre><code class="plaintext" data-trim data-noescape data-line-numbers="">
 git clone https://github.com/jamespascoe/LuaChat.git
-sudo apt-get install lua5.3 luarocks swig
+sudo apt-get -y install lua5.3 lua5.3-dev luarocks swig
 sudo luarocks install luaposix
 mkdir build; cd build; cmake ../LuaChat; make
 ./src/lua_chat # should print usage
@@ -377,12 +377,107 @@ target_include_directories(actions PRIVATE
 target_compile_definitions(actions PRIVATE ASIO_STANDALONE)
 
 target_link_libraries(actions PRIVATE std::filesystem)
-              </code></pre>
+            </code></pre>
           </section>
 
+					<section>
+						<h2>LuaChat SWIG Input</h2>
+            <pre class="stretch"><code class="" data-trim data-line-numbers="">
+%module Actions
 
+%include &ltstd_string.i&gt
 
+// Definitions required by the SWIG wrapper to compile
+%{
+#include "lua_chat_log_manager.hpp"
+#include "lua_chat_action_log.hpp"
+#include "lua_chat_action_talk.hpp"
+#include "lua_chat_action_timer.hpp"
+%}
 
+// Files to be wrapped by SWIG
+%include "lua_chat_action_log.hpp"
+
+%define CTOR_ERROR
+{
+  try {
+    $function
+  }
+  catch (std::exception const& e) {
+    log_fatal(e.what());
+  }
+}
+%enddef
+
+// Include the actions and define exception handlers
+%exception Talk::Talk CTOR_ERROR;
+%include "lua_chat_action_talk.hpp"
+
+%exception Timer::Timer CTOR_ERROR;
+%include "lua_chat_action_timer.hpp"
+            </code></pre>
+          </section>
+
+					<section>
+            <h2><a href="http://www.swig.org/Doc4.0/SWIGDocumentation.html#Typemaps">SWIG Typemaps</a></h2>
+            <ul>
+              <span class="fragment" style="color:yellow"><li>SWIG allows you to specify how C++ types map to types in the target langauge (in this case Lua)</li></span>
+              <span class="fragment" style="color:yellow"><li>We can map Modern C++17/20 types into Lua</li></span>
+              <span class="fragment"><ul><li>Example: Lua function callbacks</li></ul></span>
+            </ul>
+          </section>
+
+					<section>
+						<h2>Lua Callback: SWIG Input</h2>
+            <pre class="stretch"><code class="" data-trim data-line-numbers="">
+%include &ltlua_fnptr.i&gt
+
+%typemap(typecheck) Example::Callback & {
+  $1 = lua_isfunction(L, $input);
+}
+
+%typemap(in) Example::Callback & (Example::Callback temp) {
+  // Create a reference to the Lua callback
+  SWIGLUA_REF fn;
+  swiglua_ref_set(&fn, L, $input);
+
+  temp = [&fn]() {
+    swiglua_ref_get(&fn);
+
+    lua_pcall(fn.L, 0, 0, 0);
+  };
+
+  $1 = &temp;
+}
+            </code></pre>
+          </section>
+
+					<section>
+						<h2>Lua Callback: C++ & Lua</h2>
+            <pre class="fragment"><code class="c++" data-trim data-line-numbers="">
+class Example {
+public:
+  using Callback = std::function&ltvoid(void)&gt;
+
+  Example(Callback const& callback = {});
+}
+
+            </code></pre>
+            <pre class="fragment"><code class="c++" data-trim data-line-numbers="">
+void Example::Example(callback)
+{
+  std::cout &lt&lt "Calling Lua callback" &lt&lt std::endl;
+  if (callback) callback();
+}
+            </code></pre>
+            <pre class="fragment"><code class="lua" data-trim data-line-numbers="">
+local function callback()
+  print("Lua callback called")
+end
+
+example = Actions.Example(callback)
+            </code></pre>
+          </section>
 
 
 
