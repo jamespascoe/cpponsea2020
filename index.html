@@ -60,9 +60,9 @@
 						</span>
           </ul>
         </section>
-        <section>
 
-	<section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+      <section>
+	        <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
           	<h1>High Speed Rail</h1>
 					</section>
 
@@ -478,18 +478,132 @@ end
 example = Actions.Example(callback)
             </code></pre>
           </section>
+        </section>
+
+        <section>
+
+	        <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+          	<h1>Actions</h1>
+					</section>
+
+					<section>
+						<h2>LuaChat Actions</h2>
+              <ul>
+                <span class="fragment" style="color:yellow"><li>Talk: sends messages to a remote LuaChat</li></span>
+                <span class="fragment"><ul><li>Based on Asio - must also act as a server</li></ul></span>
+                  <span class="fragment"><ul><li>Use TCP for fault-tolerant in-order delivery</li></ul></span>
+                  <span class="fragment"><ul><li>One asynchronous TCP connection per message</li></ul></span>
+                <span class="fragment" style="color:yellow"><li>Timer: implements blocking and non-blocking waits</li></span>
+                  <span class="fragment"><ul><li>Use Asio - required for Lua coroutine scheduler</li></ul></span>
+                <span class="fragment" style="color:yellow"><li>Log: wraps spdlog primitives </li></span>
+              </ul>
+          </section>
+
+					<section>
+            <h2><a href="http://think-async.com/Asio/asio-1.12.2/doc/asio/tutorial/tutdaytime3.html#asio.tutorial.tutdaytime3.the_tcp_connection_class">TCP Connections</a></h2>
+
+            </code></pre>
+            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|1-2|4-8,15-16|10-12,18-19">
+class tcp_connection
+  : public std::enable_shared_from_this&lttcp_connection&gt {
+public:
+  using pointer = std::shared_ptr&lttcp_connection&gt;
+
+  static pointer create(asio::io_context& io_context) {
+    return pointer(new tcp_connection(io_context));
+  }
+
+  asio::ip::tcp::socket& socket() { return m_socket; }
+
+  std::string& data() { return m_data; }
+
+private:
+  tcp_connection(asio::io_context& io_context)
+    : m_socket(io_context) {}
+
+  asio::ip::tcp::socket m_socket;
+  std::string m_data;
+};
+            </code></pre>
+          </section>
+
+					<section>
+            <h2>Connection Handling</h2>
+            </code></pre>
+            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|2-3|4,6|12-20">
+Talk::Talk(unsigned short port)
+    : m_acceptor(m_io_context,
+                tcp::endpoint(tcp::v4(), port)) {
+  start_accept();
+
+  m_thread = std::thread([this](){ m_io_context.run(); });
+
+  log_trace("Talk action starting");
+}
+
+void Talk::start_accept() {
+  tcp_connection::pointer connection =
+      tcp_connection::create(
+        m_acceptor.get_executor().context()
+      );
+
+  m_acceptor.async_accept(connection-&gtsocket(),
+      [this, connection](const asio::error_code& error) {
+        handle_accept(connection, error);
+      }
+  );
+}
+            </code></pre>
+          </section>
+
+					<section>
+            <h2>Storing Data</h2>
+            </code></pre>
+            <pre><code class="c++" data-trim data-line-numbers="|4|6-9">
+void Talk::handle_read(asio::error_code const& error,
+                       std::size_t bytes_transferred,
+                       tcp_connection::pointer connection) {
+  if (!error || error == asio::error::eof) {
+    // Limit the message array
+    if (m_messages.size() &gt max_messages)
+      m_messages.erase(m_messages.begin());
+
+    m_messages.emplace_back(connection-&gtdata());
+
+    log_info("Received message ({} bytes): {}",
+             bytes_transferred,
+             connection-&gtdata());
+  } else
+    log_error("Talk read failed: {}", error.message());
+}
+            </code></pre>
+          </section>
+
+					<section>
+            <h2>Lua Retrieval</h2>
+            </code></pre>
+            <pre><code class="c++" data-trim data-line-numbers="">
+std::string Talk::GetNextMessage(void) {
+  if (!IsMessageAvailable())
+    return "";
+
+  std::string ret = m_messages.front();
+
+  m_messages.erase(m_messages.begin());
+
+  return ret;
+}
+            </code></pre>
+          </section>
+
 
 
 
         </section>
-
 			</div>
 		</div>
 
 		<script src="js/reveal.js"></script>
-
-
-
 
 		<script>
 			// More info about config & dependencies:
