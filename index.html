@@ -1,41 +1,43 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>C++17 + Lua = Flexibility</title>
+    <title>Combining Modern C++ and Lua</title>
 
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
         <section>
-          <h1>C++17 + Lua = Flexibility</h1>
+          <h1>Combining Modern C++ and Lua</h1>
           <p>
             <small>
               James (Jim) Pascoe<br>
-              <a href="http://www.james-pascoe.com">http://jamespascoe.com</a><br>
-              <a href="http://jamespascoe.github.io/accu2020">http://jamespascoe.github.io/accu2020</a><p>
-              <a href="mailto:james@james-pascoe.com">james@jamespascoe.com</a><br>
+              <a href="http://www.james-pascoe.com">http://www.jamespascoe.com</a><br>
+              <a href="mailto:james@james-pascoe.com">james@jamespascoe.com</a><p>
+
+              <a href="http://jamespascoe.github.io/cpponsea2020">http://jamespascoe.github.io/cpponsea2020</a><br>
+              <a href="https://github.com/bluwireless/LuaChat.git">https://github.com/jamespascoe/LuaChat.git</a>
             </small>
         </section>
-				<section>
+        <section>
           <h2>Overview</h2>
           <ul>
             <span class="fragment"><li>Software Flexibility</li></span>
@@ -55,107 +57,107 @@
             <span class="fragment"><ul><li>programming vs. software engineering</li></ul></span>
             <span class="fragment"><li>Easy to change (short turnaround time)</li></span>
             <span class="fragment"><li>Behaviour is adaptable and dynamic</li></span>
-						<span class="fragment fade-in">
+            <span class="fragment fade-in">
             <span class="fragment highlight-yellow"><li>Copes with future unknowns</li></span>
-						</span>
+            </span>
           </ul>
         </section>
 
       <section>
-	        <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
-          	<h1>High Speed Rail</h1>
-					</section>
+          <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+            <h1>High Speed Rail</h1>
+          </section>
 
-					<section>
-						<h2><a href="http://bluwireless.com/">Blu Wireless</a></h2>
-						<ul>
-							<span class="fragment"><li>IP networking over 5G mmWave (60 GHz) modems</li></span>
-								<span class="fragment"><ul><li>802.11ad MAC + PHY (Hydra)</li></ul></span>
-							<span class="fragment"><li>Embedded ARM based Cavium (Marvell) NPUs</li></span>
-								<span class="fragment"><ul><li>High specification running Ubuntu 18.04</li></ul></span>
-							<span class="fragment"><li>Multi gigabit wireless links (up-to 1km)</li></span>
-								<span class="fragment"><ul><li>Mobile and Fixed Wireless Applications</ul></span>
-						</ul>
-					</section>
+          <section>
+            <h2><a href="http://bluwireless.com/">Blu Wireless</a></h2>
+            <ul>
+              <span class="fragment"><li>IP networking over 5G mmWave (60 GHz) modems</li></span>
+                <span class="fragment"><ul><li>802.11ad MAC + PHY (Hydra)</li></ul></span>
+              <span class="fragment"><li>Embedded ARM based Cavium (Marvell) NPUs</li></span>
+                <span class="fragment"><ul><li>High specification running Ubuntu 18.04</li></ul></span>
+              <span class="fragment"><li>Multi gigabit wireless links (up-to 1km)</li></span>
+                <span class="fragment"><ul><li>Mobile and Fixed Wireless Applications</ul></span>
+            </ul>
+          </section>
 
-					<section>
+          <section>
             <h2><a href="http://bluwireless.com/transport/rail/">High Speed Rail</a></h2>
-						<ul>
-							<span class="fragment"><li>High-bandwidth, low latency Internet connectivity</li></span>
-							<span class="fragment"><ul><li>Connection must not drop e.g. in tunnels</ul></span>
-							<span class="fragment"><li>mmWave radios are mounted along the track-side</li></span>
-							<span class="fragment"><ul><li>10Gb fibers provide back-haul to the Internet</li></ul></span>
-							<span class="fragment"><li>mmWave radios are also mounted on the trains</li></span>
-							<span class="fragment"><ul><li>NPUs co-ordinate via on-board wired Ethernet</li></ul></span>
-						</ul>
-					</section>
+            <ul>
+              <span class="fragment"><li>High-bandwidth, low latency Internet connectivity</li></span>
+              <span class="fragment"><ul><li>Connection must not drop e.g. in tunnels</ul></span>
+              <span class="fragment"><li>mmWave radios are mounted along the track-side</li></span>
+              <span class="fragment"><ul><li>10Gb fibers provide back-haul to the Internet</li></ul></span>
+              <span class="fragment"><li>mmWave radios are also mounted on the trains</li></span>
+              <span class="fragment"><ul><li>NPUs co-ordinate via on-board wired Ethernet</li></ul></span>
+            </ul>
+          </section>
 
-					<section data-menu-title="Blu Wireless Devices">
-					<img class="stretch" data-src="media/devices.png" style="background:none; border:none; box-shadow:none;">
-					</section>
+          <section data-menu-title="Blu Wireless Devices">
+          <img class="stretch" data-src="media/devices.png" style="background:none; border:none; box-shadow:none;">
+          </section>
 
-					<section section data-menu-title="Rail Environment Video" data-background-video="media/BluWireless_Rail.mp4"></section>
+          <section section data-menu-title="Rail Environment Video" data-background-video="media/BluWireless_Rail.mp4"></section>
 
-					<section>
-						<h2>Connection Manager</h2>
-						<ul>
-						  <span class="fragment fade-in">
-							  <span class="fragment highlight-yellow"><li>Critical software component</li></span>
-						  </span>
-						  <span class="fragment fade-in">
-							  <span class="fragment highlight-yellow"><li>Decides which radio to connect to and when</li></span>
-						  </span>
-							<span class="fragment"><li>v1.0 implemented simple behaviour:</li></span>
-							<span class="fragment">
-								<ol>
-									<li>Scan for track-side access points (APs)</li>
-									<li>Connect to AP with the strongest signal</li>
-									<li>Wait for disconnection (and go back to 1)</li>
-								</ol>
-							</span>
-						</ul>
-					</section>
+          <section>
+            <h2>Connection Manager</h2>
+            <ul>
+              <span class="fragment fade-in">
+                <span class="fragment highlight-yellow"><li>Critical software component</li></span>
+              </span>
+              <span class="fragment fade-in">
+                <span class="fragment highlight-yellow"><li>Decides which radio to connect to and when</li></span>
+              </span>
+              <span class="fragment"><li>v1.0 implemented simple behaviour:</li></span>
+              <span class="fragment">
+                <ol>
+                  <li>Scan for track-side access points (APs)</li>
+                  <li>Connect to AP with the strongest signal</li>
+                  <li>Wait for disconnection (and go back to 1)</li>
+                </ol>
+              </span>
+            </ul>
+          </section>
 
-					<section data-menu-title="Architecture Diagram">
-					<img class="stretch" data-src="media/CMv1-Architecture.png" style="background:none; border:none; box-shadow:none;">
-					</section>
+          <section data-menu-title="Architecture Diagram">
+          <img class="stretch" data-src="media/CMv1-Architecture.png" style="background:none; border:none; box-shadow:none;">
+          </section>
 
-					<section>
-						<h2>Observations</h2>
-						<ul>
+          <section>
+            <h2>Observations</h2>
+            <ul>
               <span class="fragment"><li>Fixed behaviour was too simplistic</li></span>
               <span class="fragment"><ul><li>RF anomalies led to poor decision making</li></ul></span>
-							<span class="fragment"><li>Code could only be extended by Software Engineers</li></span>
+              <span class="fragment"><li>Code could only be extended by Software Engineers</li></span>
               <span class="fragment"><ul><li>Modifications required C++ expertise</li></ul></span>
-							<span class="fragment"><li>Problems were 'worked around' and not 'solved'</li></span>
+              <span class="fragment"><li>Problems were 'worked around' and not 'solved'</li></span>
               <span class="fragment"><ul><li>New requirements could not be accomodated</li></ul></span>
-						</ul>
+            </ul>
             <p>
-						<span class="fragment fade-in" style="color:yellow">Improvements could not be made fast enough</span>
-					</section>
+            <span class="fragment fade-in" style="color:yellow">Improvements could not be made fast enough</span>
+          </section>
 
-					<section>
-						<h2>Mobile Connection Manager</h2>
-						<ul>
+          <section>
+            <h2>Mobile Connection Manager</h2>
+            <ul>
               <span class="fragment"><li>Complete redesign of Connection Manager</li></span>
               <span class="fragment"><li>Decoupled modular architecture (C++17 & Lua 5.3)</li></span>
-						  <span class="fragment fade-in" style="color:yellow"><li>Actions (C++17): 'Scan', 'Connect', 'Probe' etc.</li></span>
-						  <span class="fragment fade-in" style="color:yellow"><li>Behaviours (Lua): sequences of actions</li></span>
+              <span class="fragment fade-in" style="color:yellow"><li>Actions (C++17): 'Scan', 'Connect', 'Probe' etc.</li></span>
+              <span class="fragment fade-in" style="color:yellow"><li>Behaviours (Lua): sequences of actions</li></span>
               <span class="fragment fade-in" style="color:yellow"><ul><li>Maximise bandwidth</li></span>
               <span class="fragment fade-in" style="color:yellow"><li>Implement 'beam choreography'</li></ul></span>
             </ul>
-					</section>
-				</section>
+          </section>
+        </section>
 
         <section>
 
           <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
             <h1>Combining Modern C++ and Lua</h1>
-				  </section>
+          </section>
 
-					<section>
-						<h2>LuaChat</h2>
-						<ul>
+          <section>
+            <h2>LuaChat</h2>
+            <ul>
               <span><li>Unix 'talk' program (written in C++ & Lua)</li></span>
               <span><li>Available on <a href="http://www.github.com/jamespascoe/">GitHub</a> (MIT license)</li></span>
               <span><li><a href="http://think-async.com/Asio/asio-1.12.2/doc/">Asio</a> for asynchronous TCP/UDP
@@ -166,8 +168,8 @@
             </ul>
           </section>
 
-					<section>
-						<h2>Build Instructions</h2>
+          <section>
+            <h2>Build Instructions</h2>
             <p>
             Ubuntu 18.04 (Linux Mint 19):
             <pre><code class="plaintext" data-trim data-noescape data-line-numbers="">
@@ -188,7 +190,7 @@ mkdir build; cd build; cmake ../LuaChat; make
             </code></pre>
           </section>
 
-					<section>
+          <section>
             <h2><a href="https://www.lua.org/manual/5.3/manual.html#4">The Lua Stack</a></h2>
             <ul>
               <span class="fragment"><li>Lua communicates with C++ through an API</li></span>
@@ -199,8 +201,8 @@ mkdir build; cd build; cmake ../LuaChat; make
             </ul>
           </section>
 
-					<section>
-						<h2>Calling Lua from C++</h2>
+          <section>
+            <h2>Calling Lua from C++</h2>
             <pre><code class="lua" data-trim data-line-numbers="1">
 a = f("how", t.x, 14)      -- Lua code to run in C++
             </code></pre>
@@ -216,8 +218,8 @@ lua_setglobal(L, "a");     /* set global 'a' */
             </code></pre>
           </section>
 
-					<section>
-						<h2>Simple Example: C++</h2>
+          <section>
+            <h2>Simple Example: C++</h2>
             <pre class="stretch"><code class="c++" style="width:103%" data-trim data-line-numbers="">
 #include &ltiostream&gt
 
@@ -264,8 +266,8 @@ int main([[maybe_unused]] int argc, char ** argv)
             </code></pre>
           </section>
 
-					<section>
-						<h2>Simple Example: Lua</h2>
+          <section>
+            <h2>Simple Example: Lua</h2>
             <pre><code class="stretch lua" data-trim data-line-numbers="">
 -- Create a global table 't' and add two values
 t = { x=1, y=2 }
@@ -286,8 +288,8 @@ end
             </code></pre>
           </section>
 
-					<section>
-						<h2>Simple Example: Build & Run</h2>
+          <section>
+            <h2>Simple Example: Build & Run</h2>
               <pre style="width:100%"><code class="plaintext" data-trim data-noescape data-line-numbers="1-2|3-7">
 > clang++ -I/usr/include/lua5.3 -llua5.3 -o lua-cpp lua-cpp.cpp
 > ./lua-cpp lua-cpp.lua
@@ -299,8 +301,8 @@ how
               </code></pre>
           </section>
 
-					<section>
-						<h2>LuaChat Arguments</h2>
+          <section>
+            <h2>LuaChat Arguments</h2>
             <pre class="stretch"><code class="c++" style="width:103%" data-trim data-line-numbers="">
 void LuaManager::ProcessArguments(
   std::vector&ltstd::string&gt const& arguments)
@@ -343,7 +345,7 @@ void LuaManager::ProcessArguments(
               </code></pre>
           </section>
 
-					<section>
+          <section>
             <h2><a href="http://swig.org">SWIG</a></h2>
             <ul>
               <span class="fragment"><li>Simplified Wrapper and Interface Generator</li></span>
@@ -354,8 +356,8 @@ void LuaManager::ProcessArguments(
             </ul>
           </section>
 
-					<section>
-						<h2>LuaChat SWIG CMake</h2>
+          <section>
+            <h2>LuaChat SWIG CMake</h2>
             <pre class="stretch"><code class="CMake" data-trim data-line-numbers="|2|8">
 set(LUA_CHAT_SWIG_SRCS
     lua_chat_actions.i lua_chat_action_log.cpp)
@@ -380,8 +382,8 @@ target_link_libraries(actions PRIVATE std::filesystem)
             </code></pre>
           </section>
 
-					<section>
-						<h2>LuaChat SWIG Input</h2>
+          <section>
+            <h2>LuaChat SWIG Input</h2>
             <pre class="stretch"><code class="" data-trim data-line-numbers="">
 %module Actions
 
@@ -418,7 +420,7 @@ target_link_libraries(actions PRIVATE std::filesystem)
             </code></pre>
           </section>
 
-					<section>
+          <section>
             <h2><a href="http://www.swig.org/Doc4.0/SWIGDocumentation.html#Typemaps">SWIG Typemaps</a></h2>
             <ul>
               <span class="fragment" style="color:yellow"><li>SWIG allows you to specify how C++ types map to types in the target langauge (in this case Lua)</li></span>
@@ -427,8 +429,8 @@ target_link_libraries(actions PRIVATE std::filesystem)
             </ul>
           </section>
 
-					<section>
-						<h2>Lua Callback: SWIG Input</h2>
+          <section>
+            <h2>Lua Callback: SWIG Input</h2>
             <pre class="stretch"><code class="" data-trim data-line-numbers="">
 %include &ltlua_fnptr.i&gt
 
@@ -452,8 +454,8 @@ target_link_libraries(actions PRIVATE std::filesystem)
             </code></pre>
           </section>
 
-					<section>
-						<h2>Lua Callback: C++ & Lua</h2>
+          <section>
+            <h2>Lua Callback: C++ & Lua</h2>
             <pre class="fragment"><code class="c++" data-trim data-line-numbers="">
 class Example {
 public:
@@ -482,12 +484,12 @@ example = Actions.Example(callback)
 
         <section>
 
-	        <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
-          	<h1>Actions</h1>
-					</section>
+          <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+            <h1>Actions</h1>
+          </section>
 
-					<section>
-						<h2>LuaChat Actions</h2>
+          <section>
+            <h2>LuaChat Actions</h2>
               <ul>
                 <span class="fragment" style="color:yellow"><li>Talk: sends messages to a remote LuaChat</li></span>
                 <span class="fragment"><ul><li>Based on Asio - must also act as a server</li></ul></span>
@@ -499,7 +501,7 @@ example = Actions.Example(callback)
               </ul>
           </section>
 
-					<section>
+          <section>
             <h2><a href="http://think-async.com/Asio/asio-1.12.2/doc/asio/tutorial/tutdaytime3.html#asio.tutorial.tutdaytime3.the_tcp_connection_class">TCP Connections</a></h2>
 
             </code></pre>
@@ -527,7 +529,7 @@ private:
             </code></pre>
           </section>
 
-					<section>
+          <section>
             <h2>Connection Handling</h2>
             </code></pre>
             <pre class="stretch"><code class="c++" data-trim data-line-numbers="|2-3|4,6|12-20">
@@ -556,7 +558,7 @@ void Talk::start_accept() {
             </code></pre>
           </section>
 
-					<section>
+          <section>
             <h2>Storing Data</h2>
             </code></pre>
             <pre><code class="c++" data-trim data-line-numbers="|4|6-9">
@@ -579,7 +581,7 @@ void Talk::handle_read(asio::error_code const& error,
             </code></pre>
           </section>
 
-					<section>
+          <section>
             <h2>Lua Retrieval</h2>
             </code></pre>
             <pre><code class="c++" data-trim data-line-numbers="">
@@ -596,37 +598,50 @@ std::string Talk::GetNextMessage(void) {
             </code></pre>
           </section>
 
+          <section>
+            <h2>Using Callbacks</h2>
+            <ul>
+              <span class="fragment"><li>Could call Lua callbacks from Asio handlers</li></span>
+              <span class="fragment"><li>Feasible but requires changes to the Lua locking</li></span>
+              <span class="fragment"><li>Lua allows you to specify locking and unlocking primitives</li></span>
+              <span class="fragment"><li>For out-of-the box operation, allow Lua to pull data from C++</li></span>
+            </ul>
+          </section>
 
+
+          <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+            <h1>Behaviour</h1>
+          </section>
 
 
         </section>
-			</div>
-		</div>
+      </div>
+    </div>
 
-		<script src="js/reveal.js"></script>
+    <script src="js/reveal.js"></script>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				hash: true,
-				controls: false,
-				totalTime: 5400,
-				hideInactiveCursor: true,
-				hideCursorTime: 2000,
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        hash: true,
+        controls: false,
+        totalTime: 5400,
+        hideInactiveCursor: true,
+        hideCursorTime: 2000,
         hideAddressBar: true,
         preloadIframes: true,
         progress: false,
         touch: true,
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
           { src: 'plugin/menu/menu.js' },
-					{ src: 'plugin/highlight/highlight.js', async: true },
-					{ src: 'plugin/notes/notes.js', async: true }
-				]
-			});
-		</script>
-	</body>
+          { src: 'plugin/highlight/highlight.js', async: true },
+          { src: 'plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+  </body>
 </html>
