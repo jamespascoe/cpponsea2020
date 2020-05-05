@@ -50,20 +50,20 @@ var RevealMenu = window.RevealMenu || (function(){
 			var custom = options.custom;
 			var themesPath = typeof options.themesPath === 'string' ? options.themesPath : 'css/theme/';
 			if (!themesPath.endsWith('/')) themesPath += '/';
-			var themes = select('link#theme') ? options.themes : false;
+			var themes = true //select('link#theme') ? options.themes : false;
 			if (themes === true) {
 				themes = [
 					{ name: 'Black', theme: themesPath + 'black.css' },
-					{ name: 'White', theme: themesPath + 'white.css' },
+//					{ name: 'White', theme: themesPath + 'white.css' },
 					{ name: 'League', theme: themesPath + 'league.css' },
-					{ name: 'Sky', theme: themesPath + 'sky.css' },
-					{ name: 'Beige', theme: themesPath + 'beige.css' },
-					{ name: 'Simple', theme: themesPath + 'simple.css' },
-					{ name: 'Serif', theme: themesPath + 'serif.css' },
-					{ name: 'Blood', theme: themesPath + 'blood.css' },
-					{ name: 'Night', theme: themesPath + 'night.css' },
-					{ name: 'Moon', theme: themesPath + 'moon.css' },
-					{ name: 'Solarized', theme: themesPath + 'solarized.css' }
+//					{ name: 'Sky', theme: themesPath + 'sky.css' },
+//					{ name: 'Beige', theme: themesPath + 'beige.css' },
+//					{ name: 'Simple', theme: themesPath + 'simple.css' },
+//					{ name: 'Serif', theme: themesPath + 'serif.css' },
+//					{ name: 'Blood', theme: themesPath + 'blood.css' },
+//					{ name: 'Night', theme: themesPath + 'night.css' },
+//					{ name: 'Solarized', theme: themesPath + 'solarized.css' },
+					{ name: 'Moon', theme: themesPath + 'moon.css' }
 				];
 			} else if (!Array.isArray(themes)) {
 				themes = false;

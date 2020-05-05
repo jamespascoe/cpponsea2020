@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/reveal.css">
-    <link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/theme/black.css" id="theme">
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/monokai.css">
@@ -603,11 +603,13 @@ std::string Talk::GetNextMessage(void) {
             <ul>
               <span class="fragment"><li>Could call Lua callbacks from Asio handlers</li></span>
               <span class="fragment"><li>Feasible but requires changes to the Lua locking</li></span>
-              <span class="fragment"><li>Lua allows you to specify locking and unlocking primitives</li></span>
-              <span class="fragment"><li>For out-of-the box operation, allow Lua to pull data from C++</li></span>
+              <span class="fragment"><li>Lua allows you to specify locking primitives</li></span>
+              <span class="fragment"><li>For out-of-the box operation, allow Lua to read data from C++</li></span>
             </ul>
           </section>
 
+        </section>
+        <section>
 
           <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
             <h1>Behaviour</h1>
@@ -634,6 +636,9 @@ std::string Talk::GetNextMessage(void) {
         preloadIframes: true,
         progress: false,
         touch: true,
+        menu: {
+          theme: true
+        },
         dependencies: [
           { src: 'plugin/markdown/marked.js' },
           { src: 'plugin/markdown/markdown.js' },
