@@ -58,7 +58,7 @@
             <span class="fragment"><li>Easy to change (short turnaround time)</li></span>
             <span class="fragment"><li>Behaviour is adaptable and dynamic</li></span>
             <span class="fragment fade-in">
-            <span class="fragment highlight-yellow"><li>Copes with future unknowns</li></span>
+              <span class="fragment highlight-yellow"><li>Copes with future unknowns</li></span>
             </span>
           </ul>
         </section>
@@ -156,7 +156,19 @@
           </section>
 
           <section>
-            <h2>LuaChat</h2>
+            <h2><a href="http://lua.org">Lua</a></h2>
+            <ul>
+              <span class="fragment"><li>Lightweight embeddable scripting language</li></span>
+              <span class="fragment"><li>Dynamically typed, runs by interpreting bytecode</li></span>
+              <span class="fragment"><li>Simple procedural syntax</li></span>
+              <span class="fragment fade-in">
+                <span class="fragment highlight-yellow"><li>Instant appeal for Architects, FAEs etc.</li></span>
+              </span>
+            </ul>
+          </section>
+
+          <section>
+            <h2><a href="http://www.github.com/jamespascoe/">LuaChat</a></h2>
             <ul>
               <span><li>Unix 'talk' program (written in C++ & Lua)</li></span>
               <span><li>Available on <a href="http://www.github.com/jamespascoe/">GitHub</a> (MIT license)</li></span>
@@ -611,9 +623,30 @@ std::string Talk::GetNextMessage(void) {
         </section>
         <section>
 
-          <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
-            <h1>Behaviour</h1>
-          </section>
+        <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+          <h1>Behaviour</h1>
+        </section>
+
+        <section>
+          <h2>Lua Coroutines</h2>
+            <ul>
+              <span class="fragment"><li>Similar to threads</li></span>
+              <span class="fragment"><li>Stackful (so can be suspended anywhere)</li></span>
+              <span class="fragment"><li>Non-preemptive multithreading</li></span>
+              <span class="fragment"><li>Explicit syncrhonisation</li></span>
+            </ul>
+        </section>
+
+        <section>
+          <h2>Behaviour Structure</h2>
+            <ul>
+              <span class="fragment"><li>Sender coroutine: sends user input to peer</li></span>
+              <span class="fragment"><li>Receiver coroutine: prints received messages</li></span>
+              <span class="fragment"><li>Dispatcher coroutine: schedules sender and receiver</li></span>
+              <span class="fragment"><li>main: processes arguments and creates coroutines</li></span>
+            </ul>
+        </section>
+
 
 
         </section>
