@@ -50,7 +50,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			var custom = options.custom;
 			var themesPath = typeof options.themesPath === 'string' ? options.themesPath : 'css/theme/';
 			if (!themesPath.endsWith('/')) themesPath += '/';
-			var themes = true //select('link#theme') ? options.themes : false;
+			var themes = true // select('link#theme') ? options.themes : false;
 			if (themes === true) {
 				themes = [
 					{ name: 'Black', theme: themesPath + 'black.css' },
