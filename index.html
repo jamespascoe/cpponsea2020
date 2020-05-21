@@ -218,7 +218,7 @@ mkdir build; cd build; cmake ../LuaChat; make
             <pre><code class="lua" data-trim data-line-numbers="1">
 a = f("how", t.x, 14)      -- Lua code to run in C++
             </code></pre>
-            <pre><code class="c++" data-trim data-line-numbers="|1|2|3-5|6|7|8">
+            <pre><code class="c++" data-trim data-line-numbers="|1|2|3-5|6|7|8|">
 lua_getglobal(L, "f");     /* function to be called */
 lua_pushliteral(L, "how"); /* 1st argument */
 lua_getglobal(L, "t");     /* table to be indexed */
@@ -302,7 +302,7 @@ end
 
           <section>
             <h2>Simple Example: Build & Run</h2>
-              <pre style="width:100%"><code class="plaintext" data-trim data-noescape data-line-numbers="1-2|3-7">
+              <pre style="width:100%"><code class="plaintext" data-trim data-noescape data-line-numbers="|1-2|3-7|">
 > clang++ -I/usr/include/lua5.3 -llua5.3 -o lua-cpp lua-cpp.cpp
 > ./lua-cpp lua-cpp.lua
 Lua: f called with args: how 1 14
@@ -370,7 +370,7 @@ void LuaManager::ProcessArguments(
 
           <section>
             <h2>LuaChat SWIG CMake</h2>
-            <pre class="stretch"><code class="CMake" data-trim data-line-numbers="|2|8">
+            <pre class="stretch"><code class="CMake" data-trim data-line-numbers="|2|8|">
 set(LUA_CHAT_SWIG_SRCS
     lua_chat_actions.i lua_chat_action_log.cpp)
 
@@ -517,7 +517,7 @@ example = Actions.Example(callback)
             <h2><a href="http://think-async.com/Asio/asio-1.12.2/doc/asio/tutorial/tutdaytime3.html#asio.tutorial.tutdaytime3.the_tcp_connection_class">TCP Connections</a></h2>
 
             </code></pre>
-            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|1-2|4-8,15-16|10-12,18-19">
+            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|1-2|4-8,15-16|10-12,18-19|">
 class tcp_connection
   : public std::enable_shared_from_this&lttcp_connection&gt {
 public:
@@ -544,7 +544,7 @@ private:
           <section>
             <h2>Connection Handling</h2>
             </code></pre>
-            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|2-3|4,6|12-20">
+            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|2-3|4,6|12-20|">
 Talk::Talk(unsigned short port)
     : m_acceptor(m_io_context,
                 tcp::endpoint(tcp::v4(), port)) {
@@ -573,7 +573,7 @@ void Talk::start_accept() {
           <section>
             <h2>Storing Data</h2>
             </code></pre>
-            <pre><code class="c++" data-trim data-line-numbers="|4|6-9">
+            <pre><code class="c++" data-trim data-line-numbers="|4|6-9|">
 void Talk::handle_read(asio::error_code const& error,
                        std::size_t bytes_transferred,
                        tcp_connection::pointer connection) {
@@ -638,7 +638,7 @@ std::string Talk::GetNextMessage(void) {
         </section>
 
         <section>
-          <h2>Behaviour Structure</h2>
+          <h2><a href="https://github.com/bluwireless/LuaChat/blob/master/behaviours/lua_chat.lua">LuaChat Behaviour</a></h2>
             <ul>
               <span class="fragment"><li>Sender coroutine: sends user input to peer</li></span>
               <span class="fragment"><li>Receiver coroutine: prints received messages</li></span>
@@ -647,6 +647,106 @@ std::string Talk::GetNextMessage(void) {
             </ul>
         </section>
 
+        <section>
+            <h2>Sender Coroutine</h2>
+            </code></pre>
+            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|5|10-12|24|">
+function sender (talk, host, port)
+
+  while true do
+
+    local ret = require 'posix'.rpoll(0, 1000)
+    if (ret == 1) then
+      local message = io.read()
+      if (message ~= "") then
+
+        local ret = talk:Send(
+          tostring(host), tostring(port), tostring(message)
+        )
+
+        if (ret == Actions.Talk.ErrorType_SUCCESS) then
+          Actions.Log.info(
+            string.format(
+              "Message sent to %s:%s %s", host, port, message
+            )
+          )
+        end
+      end
+    end
+
+    coroutine.yield()
+
+  end
+
+end
+            </code></pre>
+          </section>
+
+        <section>
+            <h2>Receiver Coroutine</h2>
+            </code></pre>
+            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|6-8|10|12-16|18|">
+function receiver (talk, host, port)
+
+  while true do
+
+    -- Yield until a message arrives, at which point, print it
+    repeat
+      coroutine.yield()
+    until talk:IsMessageAvailable()
+
+    message = talk:GetNextMessage()
+
+    Actions.Log.info(
+      string.format(
+        "Received from %s:%s %s", host, port, message
+      )
+    )
+
+    print(host .. ":" .. tostring(port) .. "&gt " .. message)
+
+  end
+
+end
+            </code></pre>
+          </section>
+
+        <section>
+          <h2><a href="https://www.lua.org/pil/9.4.html">Dispatcher</a></h2>
+            </code></pre>
+            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|3|8-9|11-24|27|">
+function dispatcher (coroutines)
+
+  local timer = Actions.Timer()
+
+  while true do
+    if next(coroutines) == nil then break end -- no coroutines
+
+    for name, co in pairs(coroutines) do
+      local status, res = coroutine.resume(co)
+
+      if res then -- coroutine has exited
+
+        if type(res) == "string" then -- runtime error
+          Actions.Log.critical(
+            "Coroutine '" .. tostring(name) .. "' error " .. res
+          )
+        else
+          Actions.Log.warn(
+            "Coroutine '" .. tostring(name) .. "' exited"
+          )
+        end
+
+        coroutines[name] = nil
+      end
+    end
+
+    timer(Actions.Timer.WaitType_BLOCK, 1, "ms", 0xffffffff)
+
+  end
+end
+            </code></pre>
+          </section>
 
 
         </section>
