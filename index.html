@@ -694,7 +694,7 @@ function receiver (talk, host, port)
       coroutine.yield()
     until talk:IsMessageAvailable()
 
-    message = talk:GetNextMessage()
+    local message = talk:GetNextMessage()
 
     Actions.Log.info(
       string.format(
