@@ -119,7 +119,7 @@
           </section>
 
           <section data-menu-title="Architecture Diagram">
-          <img class="stretch" data-src="media/CMv1-Architecture.png" style="background:none; border:none; box-shadow:none;">
+          <img class="stretch" data-src="media/Connection_Manager_Stack.png" style="background:none; border:none; box-shadow:none;">
           </section>
 
           <section>
@@ -341,7 +341,7 @@ void LuaManager::ProcessArguments(
       else
         throw std::runtime_error("Could not parse arg: " + arg);
     } catch (std::logic_error const& e) {
-      throw std::runtime_error("Exception converting Lua argument "
+      throw std::runtime_error("Exception converting argument "
                                + arg + ": " + e.what());
     }
 
@@ -385,7 +385,6 @@ target_include_directories(actions PRIVATE
                            ${CMAKE_CURRENT_SOURCE_DIR}
                            ${LUA_CHAT_SOURCE_DIR}/src
                            ${LUA_CHAT_SOURCE_DIR}/third_party
-                           ${LUA_CHAT_SOURCE_DIR}/third_party/asio
                            ${LUA_INCLUDE_DIR})
 
 target_compile_definitions(actions PRIVATE ASIO_STANDALONE)
@@ -761,7 +760,7 @@ end
       // - https://github.com/hakimel/reveal.js#dependencies
       Reveal.initialize({
         hash: true,
-        controls: false,
+        controls: true,
         totalTime: 5400,
         hideInactiveCursor: true,
         hideCursorTime: 2000,
