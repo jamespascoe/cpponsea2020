@@ -118,7 +118,7 @@
             </ul>
           </section>
 
-          <section data-menu-title="Architecture Diagram">
+          <section data-menu-title="CMv1 Architecture">
           <img class="stretch" data-src="media/Connection_Manager_Stack.png" style="background:none; border:none; box-shadow:none;">
           </section>
 
@@ -147,6 +147,11 @@
               <span class="fragment fade-in" style="color:yellow"><li>Implement 'beam choreography'</li></ul></span>
             </ul>
           </section>
+
+          <section data-menu-title="MCM Architecture">
+            <img class="stretch" data-src="media/Mobile_Connection_Manager.png" style="background:none; border:none; box-shadow:none;">
+          </section>
+
         </section>
 
         <section>
@@ -207,7 +212,7 @@ mkdir build; cd build; cmake ../LuaChat; make
             <ul>
               <span class="fragment"><li>Lua communicates with C++ through an API</li></span>
               <span class="fragment"><li>Values are passed between Lua and C++ using stacks</li></span>
-              <span class="fragment"><li>API functions do not enforce strict stack discipline</li></span>
+              <span class="fragment"><li>C++ API does not enforce strict stack discipline</li></span>
               <span class="fragment"><ul><li>positive indices represent absolute positions</li></ul></span>
               <span class="fragment"><ul><li>negative indices are relative to the top of the stack</li></ul></span>
             </ul>
