@@ -240,9 +240,7 @@ lua_setglobal(L, "a");     /* set global 'a' */
             <pre class="stretch"><code class="c++" style="width:103%" data-trim data-line-numbers="">
 #include &ltiostream&gt
 
-#include &ltlua.h&gt
-#include &ltlauxlib.h&gt
-#include &ltlualib.h&gt
+#include &ltlua.hpp&gt
 
 int cppFunc(lua_State *L) {
   std::cout << "cppFunc called with args:" << std::endl;
@@ -308,7 +306,7 @@ end
           <section>
             <h2>Simple Example: Build & Run</h2>
               <pre style="width:100%"><code class="plaintext" data-trim data-noescape data-line-numbers="|1-2|3-7|">
-> clang++ -I/usr/include/lua5.3 -llua5.3 -o lua-cpp lua-cpp.cpp
+> clang++ -std=c++17 -llua -o lua-cpp lua-cpp.cpp
 > ./lua-cpp lua-cpp.lua
 Lua: f called with args: how 1 14
 cppFunc called with args:
