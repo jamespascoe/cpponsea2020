@@ -175,14 +175,17 @@
           <section>
             <h2><a href="http://www.github.com/jamespascoe/">LuaChat</a></h2>
             <ul>
-              <span><li>Unix 'talk' program (written in C++ & Lua)</li></span>
+              <span><li>Unix 'talk' program (written in C++17 & Lua)</li></span>
               <span><li>Available on <a href="http://www.github.com/jamespascoe/">GitHub</a> (MIT license)</li></span>
-              <span><li><a href="http://think-async.com/Asio/asio-1.12.2/doc/">Asio</a> for asynchronous TCP/UDP
-                         communications, timers and POSIX signal handling</li></span>
+              <span><li><a href="http://think-async.com/Asio/asio-1.12.2/doc/">Asio</a> for asynchronous TCP and timers</li></span>
               <span><li><a href="https://github.com/gabime/spdlog">spdlog</a> for logging,
                         <a href="https://github.com/jarro2783/cxxopts">cxxopts</a> for command line processing and
                         <a href="https://cmake.org/cmake/help/latest/">CMake</a> for build generation</li></span>
             </ul>
+          </section>
+
+          <section data-menu-title="LuaChat Architecture">
+          <img class="stretch" data-src="media/LuaChat.png" style="background:none; border:none; box-shadow:none;">
           </section>
 
           <section>
@@ -618,7 +621,7 @@ std::string Talk::GetNextMessage(void) {
               <span class="fragment"><li>Could call Lua callbacks from Asio handlers</li></span>
               <span class="fragment"><li>Feasible but requires changes to the Lua locking</li></span>
               <span class="fragment"><li>Lua allows you to specify locking primitives</li></span>
-              <span class="fragment"><li>For out-of-the box operation, allow Lua to read data from C++</li></span>
+              <span class="fragment"><li>One method is for Lua to 'pull' data from C++</li></span>
             </ul>
           </section>
 
