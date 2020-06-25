@@ -633,12 +633,48 @@ std::string Talk::GetNextMessage(void) {
         </section>
 
         <section>
+          <h2>Coroutines</h2>
+            <ul>
+              <span class="fragment" style="color:yellow"><li>Stackful (fibers): coroutine state includes call stack</li></span>
+                <ul>
+                  <span class="fragment"><li>Examples: Lua, Boost.Coroutine</li></span>
+                  <span class="fragment"><li>pros: powerful, nested suspend and resume</li></span>
+                  <span class="fragment"><li>cons: memory intensive</li></span>
+                </ul>
+              <span class="fragment" style="color:yellow"><li>Stackless: state does not include call stack</li></span>
+                <ul>
+                  <span class="fragment"><li>Examples: C++20, co2, JavaScript</li></span>
+                  <span class="fragment"><li>pros: massively scalable, faster context switch</li></span>
+                  <span class="fragment"><li>cons: only the coroutine top-level may suspend</li></span>
+                </ul>
+            </ul>
+        </section>
+
+        <section>
+          <h2><a href="http://lua-users.org/wiki/MultiTasking">Lua Concurrency</a></h2>
+            <ul>
+              <span class="fragment"><li><a href="https://www.lua.org/pil/9.1.html">Coroutines</a>: Multithreaded C++ and Lua Coroutines</li></span>
+              <span class="fragment"><li><a href="http://lualanes.github.io/lanes/">LuaLanes</a>: OS threads with asynchronous messaging </li></span>
+              <span class="fragment"><li><a href="https://github.com/askyrme/luaproc">luaproc</a>: official tool from Lua development team</li></span>
+              <span class="fragment"><li><a href="https://github.com/effil/effil">Effil</a>: clean API, shared tables, good performance</li></span>
+              <span class="fragment"><li><a href="https://zeromq.org">ZeroMQ</a>: bindings for C++, Lua and FFI</li></span>
+              <span class="fragment">
+                <li>
+                  <a href="https://github.com/osch/lua-mtmsg#mtmsg">mtmsg</a> +
+                  <a href="https://github.com/osch/lua-mtstates#mtstates">mtstates</a> +
+                  <a href="https://github.com/osch/lua-mtint#mtint">mtint</a>: building blocks
+                </li>
+              </span>
+            </ul>
+        </section>
+
+        <section>
           <h2>Lua Coroutines</h2>
             <ul>
-              <span class="fragment"><li>Groups of coroutines form Lua threads</li></span>
-              <span class="fragment"><li>Stackful (so can be suspended anywhere)</li></span>
-              <span class="fragment"><li>Non-preemptive multithreading</li></span>
-              <span class="fragment"><li>Explicit syncrhonisation</li></span>
+              <span class="fragment"><li>Similar to a thread, but not pre-emptive</li></span>
+              <span class="fragment"><li>Brilliant for eliminating latency</li></span>
+              <span class="fragment"><li>Single threaded so lock-free, no races etc.</li></span>
+              <span class="fragment"><li>Implement your own scheduler</li></span>
             </ul>
         </section>
 
@@ -755,42 +791,6 @@ end
 
         </section>
 
-        <section>
-
-          <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
-            <h1>Concurrency</h1>
-          </section>
-
-          <section>
-            <h2><a href="http://lua-users.org/wiki/MultiTasking">Lua Concurrency</a></h2>
-              <ul>
-                <span class="fragment"><li><a href="https://www.lua.org/pil/9.1.html">Coroutines</a>: Multithreaded C++ and Lua Coroutines</li></span>
-                <span class="fragment"><li><a href="http://lualanes.github.io/lanes/">LuaLanes</a>: OS threads with asynchronous messaging </li></span>
-                <span class="fragment"><li><a href="https://github.com/askyrme/luaproc">luaproc</a>: official tool from Lua development team</li></span>
-                <span class="fragment"><li><a href="https://github.com/effil/effil">Effil</a>: clean API, shared tables, good performance</li></span>
-                <span class="fragment"><li><a href="http://25thandclement.com/~william/projects/cqueues.html">cqueues.thread</a>: non-blocking, coroutine-based I/O</li></span>
-              </ul>
-          </section>
-
-          <section>
-            <h2>Combining Frameworks</h2>
-            <span class="fragment" style="color:yellow">How can we combine C++ and Lua concurrency?</span>
-            <p>
-            <ul>
-              <span class="fragment"><li><a href="https://zeromq.org">ZeroMQ</a>: bindings for C++, Lua and FFI</li></span>
-              <span class="fragment">
-                  <li>
-                    <a href="https://github.com/osch/lua-mtmsg#mtmsg">mtmsg</a> +
-                    <a href="https://github.com/osch/lua-mtstates#mtstates">mtstates</a> +
-                    <a href="https://github.com/osch/lua-mtint#mtint">mtint</a>: building blocks
-                  </li>
-              </span>
-            </ul>
-          </section>
-
-
-
-        </section>
       </div>
     </div>
 
