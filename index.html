@@ -690,7 +690,6 @@ std::string Talk::GetNextMessage(void) {
 
         <section>
             <h2>Sender Coroutine</h2>
-            </code></pre>
             <pre class="stretch"><code class="lua" data-trim data-line-numbers="|5|10-12|24|">
 function sender (talk, host, port)
 
@@ -725,7 +724,6 @@ end
 
         <section>
             <h2>Receiver Coroutine</h2>
-            </code></pre>
             <pre class="stretch"><code class="lua" data-trim data-line-numbers="|6-8|10|12-16|18|">
 function receiver (talk, host, port)
 
@@ -752,9 +750,8 @@ end
             </code></pre>
           </section>
 
-        <section>
-          <h2><a href="https://www.lua.org/pil/9.4.html">Dispatcher</a></h2>
-            </code></pre>
+          <section>
+            <h2><a href="https://www.lua.org/pil/9.4.html">Dispatcher</a></h2>
             <pre class="stretch"><code class="lua" data-trim data-line-numbers="|3|8-9|11-24|27|">
 function dispatcher (coroutines)
 
@@ -788,6 +785,39 @@ function dispatcher (coroutines)
 end
             </code></pre>
           </section>
+
+        <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+          <h1>Performance</h1>
+        </section>
+
+        <section>
+          <h2>Analysis</h2>
+            <ul>
+              <span class="fragment"><li>Cavium Octeon ThunderX CN81 NPU @ 1.5Ghz</li></span>
+              <ul>
+                <span class="fragment"><li>4 ARMv8 cores, 78KB I$, 32KB D$, 2MB L2, CCI</li></span>
+              </ul>
+              <span class="fragment"><li>MCM is not compute bound</li></span>
+              <span class="fragment"><li>Real world events in the order of seconds</li></span>
+              <span class="fragment"><li>So, what are the objectives of the analysis?</li></span>
+            </ul>
+        </section>
+
+        <section>
+          <h2>Analysis Cont.</h2>
+            <ul>
+              <span class="fragment"><li>Yes, events are in the order of seconds, but:</li></span>
+              <span class="fragment"><li>the system has to respond quickly when they occur</li></span>
+              <ul>
+                <span class="fragment"><li>e.g. Handover, switching links, decision making</li></span>
+              </ul>
+              <span class="fragment"><li>Commercial dimension, KPIs etc.</li></span>
+              <span class="fragment"><li>Lets fire up perf</li></span>
+            </ul>
+        </section>
+
+
+
 
         </section>
 
