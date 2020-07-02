@@ -785,39 +785,53 @@ function dispatcher (coroutines)
 end
             </code></pre>
           </section>
-
-        <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
-          <h1>Performance</h1>
         </section>
 
         <section>
-          <h2>Analysis</h2>
+
+        <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
+          <h1>Conclusion</h1>
+        </section>
+
+        <section>
+          <h2>Performance</h2>
             <ul>
               <span class="fragment"><li>Cavium Octeon ThunderX CN81 NPU @ 1.5Ghz</li></span>
               <ul>
                 <span class="fragment"><li>4 ARMv8 cores, 78KB I$, 32KB D$, 2MB L2, CCI</li></span>
               </ul>
-              <span class="fragment"><li>MCM is not compute bound</li></span>
-              <span class="fragment"><li>Real world events in the order of seconds</li></span>
-              <span class="fragment"><li>So, what are the objectives of the analysis?</li></span>
+              <span class="fragment"><li>MCM is not compute or IO bound</li></span>
+              <span class="fragment" style="color:yellow"><li>But we do want to minimise event response time</li></span>
+              <ul>
+                <span class="fragment" style="color:yellow"><li>E.g. handover, switching links, decision making</li></span>
+              </ul>
             </ul>
         </section>
 
         <section>
-          <h2>Analysis Cont.</h2>
+          <h2>Advice</h2>
             <ul>
-              <span class="fragment"><li>Yes, events are in the order of seconds, but:</li></span>
-              <span class="fragment"><li>the system has to respond quickly when they occur</li></span>
+              <span class="fragment" style="color:yellow"><li>MCM spends a lot of time in the SWIG wrapper</li></span>
               <ul>
-                <span class="fragment"><li>e.g. Handover, switching links, decision making</li></span>
+                <span class="fragment"><li>prefer lightweight typemaps</li></span>
               </ul>
-              <span class="fragment"><li>Commercial dimension, KPIs etc.</li></span>
-              <span class="fragment"><li>Lets fire up perf</li></span>
+              <span class="fragment" style="color:yellow"><li>The partition between C++ and Lua is important</li></span>
+              <ul>
+                <span class="fragment"><li>as is the concurrency design</li></span>
+              </ul>
+              <span class="fragment" style="color:yellow"><li>How the code interacts with Lua is significant</li></span>
+              <ul>
+                <span class="fragment"><li>prefer precompiled long-lived behaviours</li></span>
+              </ul>
             </ul>
         </section>
 
+        <section>
+          <h2>Conclusion</h2>
+            <ul>
 
-
+            </ul>
+        </section>
 
         </section>
 
