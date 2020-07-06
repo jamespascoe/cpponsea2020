@@ -267,12 +267,24 @@ how
           <section>
             <h2><a href="http://www.github.com/jamespascoe/">LuaChat</a></h2>
             <ul>
-              <span><li>Unix 'talk' program (written in C++17 & Lua)</li></span>
-              <span><li>Available on <a href="http://www.github.com/jamespascoe/">GitHub</a> (MIT license)</li></span>
-              <span><li><a href="http://think-async.com/Asio/asio-1.12.2/doc/">Asio</a> for asynchronous TCP and timers</li></span>
-              <span><li><a href="https://github.com/gabime/spdlog">spdlog</a> for logging,
+              <span class="fragment"><li>Unix 'talk' program (written in C++17 & Lua 5.3.5)</li></span>
+              <span class="fragment"><li>Available on <a href="http://www.github.com/jamespascoe/">GitHub</a> (MIT license)</li></span>
+              <span class="fragment"><li><a href="http://think-async.com/Asio/asio-1.12.2/doc/">Asio</a> for asynchronous TCP and timers</li></span>
+              <span class="fragment"><li><a href="https://github.com/gabime/spdlog">spdlog</a> for logging,
                         <a href="https://github.com/jarro2783/cxxopts">cxxopts</a> for command line processing and
                         <a href="https://cmake.org/cmake/help/latest/">CMake</a> for build generation</li></span>
+            </ul>
+          </section>
+
+          <section>
+            <h2><a href="http://swig.org">SWIG</a></h2>
+            <ul>
+              <span class="fragment"><li>Simplified Wrapper and Interface Generator</li></span>
+              <span class="fragment"><li>Produces C++ bindings for many target languages</li></span>
+              <span class="fragment"><li>Generates Lua stack calls for std C++ types</li></span>
+              <span class="fragment"><ul><li>std::string, std::vector, std::map etc.</li></ul></span>
+              <span class="fragment"><li>C++20 types can be supported with typemaps</li></span>
+              <span class="fragment"><li>Integrates well with CMake</li></span>
             </ul>
           </section>
 
@@ -300,63 +312,6 @@ luarocks install luaposix
 mkdir build; cd build; cmake ../LuaChat; make
 ./src/lua_chat # should print usage
             </code></pre>
-          </section>
-
-          <!--
-          <section>
-            <h2>LuaChat Arguments</h2>
-            <pre class="stretch"><code class="c++" style="width:103%" data-trim data-line-numbers="">
-void LuaManager::ProcessArguments(
-  std::vector&ltstd::string&gt const& arguments)
-{
-  lua_createtable(lua_state, 0, arguments.size());
-
-  using namespace std::regex_constants
-  std::regex number_regex(R"((\w+)=([-+]?[0-9]+\.?[0-9]*)$)");
-  std::regex bool_regex(R"((\w+)=(true|false))", icase);
-  std::regex string_regex(R"((\w+)=([[:graph:]]+))");
-
-  for (auto const& arg : arguments) {
-    std::smatch match;
-
-    try {
-      if (std::regex_search(arg, match, number_regex))
-        lua_pushnumber(lua_state, std::stod(match[2].str()));
-      else if (std::regex_search(arg, match, bool_regex))
-        lua_pushboolean(lua_state,
-          !strcasecmp(match[2].str().c_str(), "true")
-        );
-      else if (std::regex_search(arg, match, string_regex))
-        lua_pushstring(lua_state, match[2].str().c_str());
-      else
-        throw std::runtime_error("Could not parse arg: " + arg);
-    } catch (std::logic_error const& e) {
-      throw std::runtime_error("Exception converting argument "
-                               + arg + ": " + e.what());
-    }
-
-    // Set the name of the key
-    lua_setfield(lua_state, -2, match[1].str().c_str());
-  }
-
-  // Store a reference to the table for when the behaviour is run
-  lua_ref_argument_table = luaL_ref(lua_state, LUA_REGISTRYINDEX);
-  if (lua_ref_argument_table == LUA_REFNIL)
-    throw std::runtime_error("Could not set Lua table reference");
-}
-              </code></pre>
-          </section>
-          -->
-
-          <section>
-            <h2><a href="http://swig.org">SWIG</a></h2>
-            <ul>
-              <span class="fragment"><li>Simplified Wrapper and Interface Generator</li></span>
-              <span class="fragment"><li>Produces C++ bindings for many target languages</li></span>
-              <span class="fragment"><ul><li>Generates Lua stack calls for std C++ types</li></ul></span>
-              <span class="fragment"><ul><li>std::string, std::vector, std::map etc.</li></ul></span>
-              <span class="fragment"><li>Integrates well with CMake</li></span>
-            </ul>
           </section>
 
           <section>
@@ -423,11 +378,12 @@ target_link_libraries(actions PRIVATE std::filesystem)
           </section>
 
           <section>
-            <h2><a href="http://www.swig.org/Doc4.0/SWIGDocumentation.html#Typemaps">SWIG Typemaps</a></h2>
+            <h2><a href="http://www.swig.org/Doc4.0/SWIGDocumentation.html#Typemaps">Typemaps</a></h2>
             <ul>
-              <span class="fragment" style="color:yellow"><li>SWIG allows you to specify how C++ types map to types in the target langauge (in this case Lua)</li></span>
-              <span class="fragment" style="color:yellow"><li>We can map Modern C++17/20 types into Lua</li></span>
-              <span class="fragment"><ul><li>Example: Lua function callbacks</li></ul></span>
+              <span class="fragment"><li>Maps C++ types onto types in the target langauge</li></span>
+              <span class="fragment"><li>We can add support for Modern C++ abstractions</li></span>
+              <span class="fragment"><ul><li>E.g. callbacks: Lua functions &#8594 std::function</li></ul></span>
+              <span class="fragment" style="color:yellow"><li>Acknowledgement: thanks to Petar Terziev for the original version of the following example</li></span>
             </ul>
           </section>
 
@@ -598,16 +554,6 @@ std::string Talk::GetNextMessage(void) {
   return ret;
 }
             </code></pre>
-          </section>
-
-          <section>
-            <h2>Using Callbacks</h2>
-            <ul>
-              <span class="fragment"><li>Could call Lua callbacks from Asio handlers</li></span>
-              <span class="fragment"><li>Feasible but requires changes to the Lua locking</li></span>
-              <span class="fragment"><li>Lua allows you to specify locking primitives</li></span>
-              <span class="fragment"><li>One method is for Lua to 'pull' data from C++</li></span>
-            </ul>
           </section>
 
         </section>
