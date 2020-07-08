@@ -390,10 +390,8 @@ target_link_libraries(actions PRIVATE std::filesystem)
           </section>
 
           <section>
-            <h2>Lua Callback: SWIG Input</h2>
+            <h2><a href="https://gist.github.com/jamespascoe/523a5cf4114a1230b4d8a386bb8cd8ba">Lua Callback: SWIG Typemap</a></h2>
             <pre class="stretch"><code class="" data-trim data-line-numbers="">
-%include &ltlua_fnptr.i&gt
-
 %typemap(typecheck) Example::Callback & {
   $1 = lua_isfunction(L, $input);
 }
@@ -411,37 +409,12 @@ target_link_libraries(actions PRIVATE std::filesystem)
 
   $1 = &temp;
 }
+
+// %include source files AFTER typemap declarations
             </code></pre>
           </section>
 
-          <section>
-            <h2>Lua Callback: C++ & Lua</h2>
-            <pre class="fragment"><code class="c++" data-trim data-line-numbers="">
-class Example {
-public:
-  using Callback = std::function&ltvoid(void)&gt;
-
-  Example(Callback const& callback = {});
-}
-
-            </code></pre>
-            <pre class="fragment"><code class="c++" data-trim data-line-numbers="">
-void Example::Example(callback)
-{
-  std::cout &lt&lt "Calling Lua callback" &lt&lt std::endl;
-  if (callback) callback();
-}
-            </code></pre>
-            <pre class="fragment"><code class="lua" data-trim data-line-numbers="">
-local function callback()
-  print("Lua callback called")
-end
-
-example = Actions.Example(callback)
-            </code></pre>
-          </section>
         </section>
-
         <section>
 
           <section data-background-video="media/BluWireless_Rail_Background.mp4" data-background-video-loop=true>
