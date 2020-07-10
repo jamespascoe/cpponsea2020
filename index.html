@@ -424,13 +424,28 @@ target_link_libraries(actions PRIVATE std::filesystem)
           <section>
             <h2>LuaChat Actions</h2>
               <ul>
-                <span class="fragment" style="color:yellow"><li>Talk: sends messages to a remote LuaChat</li></span>
+                <span class="fragment" style="color:yellow">
+                  <li>
+                    <a href=https://github.com/jamespascoe/LuaChat/blob/master/src/actions/lua_chat_action_talk.cpp>Talk</a>:
+                    sends messages to a remote LuaChat
+                  </li>
+                </span>
                 <span class="fragment"><ul><li>Based on Asio - must also act as a server</li></ul></span>
                   <span class="fragment"><ul><li>Use TCP for fault-tolerant in-order delivery</li></ul></span>
                   <span class="fragment"><ul><li>One asynchronous TCP connection per message</li></ul></span>
-                <span class="fragment" style="color:yellow"><li>Timer: implements blocking and non-blocking waits</li></span>
-                  <span class="fragment"><ul><li>Use Asio - required for Lua coroutine scheduler</li></ul></span>
-                <span class="fragment" style="color:yellow"><li>Log: wraps spdlog primitives </li></span>
+                  <span class="fragment" style="color:yellow">
+                    <li>
+                      <a href=https://github.com/jamespascoe/LuaChat/blob/master/src/actions/lua_chat_action_timer.cpp>Timer</a>:
+                      implements blocking and non-blocking waits
+                    </li>
+                  </span>
+                  <span class="fragment"><ul><li>Use Asio - required for Lua coroutine dispatcher</li></ul></span>
+                <span class="fragment" style="color:yellow">
+                  <li>
+                    <a href=https://github.com/jamespascoe/LuaChat/blob/master/src/actions/lua_chat_action_log.cpp>Log</a>:
+                    wraps spdlog primitives
+                  </li>
+                </span>
               </ul>
           </section>
 
@@ -494,15 +509,18 @@ void Talk::start_accept() {
           <section>
             <h2>Storing Data</h2>
             </code></pre>
-            <pre><code class="c++" data-trim data-line-numbers="|4|6-9|">
+            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|4-5|7-12|">
 void Talk::handle_read(asio::error_code const& error,
                        std::size_t bytes_transferred,
                        tcp_connection::pointer connection) {
+  // Check error - 'eof' means that the remote connection has closed
   if (!error || error == asio::error::eof) {
+
     // Limit the message array
     if (m_messages.size() &gt max_messages)
       m_messages.erase(m_messages.begin());
 
+    // Store the message for Lua retrieval
     m_messages.emplace_back(connection-&gtdata());
 
     log_info("Received message ({} bytes): {}",
