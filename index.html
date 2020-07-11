@@ -132,7 +132,7 @@
               <span class="fragment"><li>Code could only be extended by Software Engineers</li></span>
               <span class="fragment"><ul><li>Modifications required C++ expertise</li></ul></span>
               <span class="fragment"><li>Problems were 'worked around' and not 'solved'</li></span>
-              <span class="fragment"><ul><li>New requirements could not be accomodated</li></ul></span>
+              <span class="fragment"><ul><li>New requirements could not be accommodated</li></ul></span>
             </ul>
             <p>
             <span class="fragment fade-in" style="color:yellow">Improvements could not be made fast enough</span>
@@ -382,7 +382,7 @@ target_link_libraries(actions PRIVATE std::filesystem)
           <section>
             <h2><a href="http://www.swig.org/Doc4.0/SWIGDocumentation.html#Typemaps">Typemaps</a></h2>
             <ul>
-              <span class="fragment"><li>Maps C++ types onto types in the target langauge</li></span>
+              <span class="fragment"><li>Maps C++ types onto types in the target language</li></span>
               <span class="fragment"><li>We can add support for Modern C++ abstractions</li></span>
               <span class="fragment"><ul><li>E.g. callbacks: Lua functions &#8594 std::function</li></ul></span>
               <span class="fragment" style="color:yellow"><li>Acknowledgement: thanks to Petar Terziev for the original version of the following example</li></span>
@@ -557,31 +557,13 @@ std::string Talk::GetNextMessage(void) {
         </section>
 
         <section>
-          <h2>Coroutines</h2>
-            <ul>
-              <span class="fragment" style="color:yellow"><li>Stackful (fibers): coroutine state includes call stack</li></span>
-                <ul>
-                  <span class="fragment"><li>Examples: Lua, Boost.Coroutine</li></span>
-                  <span class="fragment"><li>pros: powerful, nested suspend and resume</li></span>
-                  <span class="fragment"><li>cons: memory intensive</li></span>
-                </ul>
-              <span class="fragment" style="color:yellow"><li>Stackless: state does not include call stack</li></span>
-                <ul>
-                  <span class="fragment"><li>Examples: C++20, co2, JavaScript</li></span>
-                  <span class="fragment"><li>pros: massively scalable, faster context switch</li></span>
-                  <span class="fragment"><li>cons: only the coroutine top-level may suspend</li></span>
-                </ul>
-            </ul>
-        </section>
-
-        <section>
           <h2><a href="http://lua-users.org/wiki/MultiTasking">Lua Concurrency</a></h2>
             <ul>
               <span class="fragment"><li><a href="https://www.lua.org/pil/9.1.html">Coroutines</a>: Multithreaded C++ and Lua Coroutines</li></span>
               <span class="fragment"><li><a href="http://lualanes.github.io/lanes/">LuaLanes</a>: OS threads with asynchronous messaging </li></span>
               <span class="fragment"><li><a href="https://github.com/askyrme/luaproc">luaproc</a>: official tool from Lua development team</li></span>
               <span class="fragment"><li><a href="https://github.com/effil/effil">Effil</a>: clean API, shared tables, good performance</li></span>
-              <span class="fragment"><li><a href="https://zeromq.org">ZeroMQ</a>: bindings for C++, Lua and FFI</li></span>
+              <span class="fragment"><li><a href="https://zeromq.org">ZeroMQ</a>: bindings for C++, Lua and FFI (<a href="https://luajit.org">LuaJIT</a>)</li></span>
               <span class="fragment">
                 <li>
                   <a href="https://github.com/osch/lua-mtmsg#mtmsg">mtmsg</a> +
@@ -593,12 +575,13 @@ std::string Talk::GetNextMessage(void) {
         </section>
 
         <section>
-          <h2>Lua Coroutines</h2>
+          <h2>Coroutines</h2>
             <ul>
-              <span class="fragment"><li>Similar to a thread, but not pre-emptive</li></span>
-              <span class="fragment"><li>Brilliant for eliminating latency</li></span>
+              <span class="fragment"><li>Great for event-driven asynchronous systems</li></span>
+              <span class="fragment"><li><a href="https://www.lua.org/pil/9.1.html">Lua coroutines</a> are stackful</li></span>
+              <span class="fragment"><li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/n4775.pdf">C++20 coroutines</a> are stackless</li></span>
               <span class="fragment"><li>Single threaded so lock-free, no races etc.</li></span>
-              <span class="fragment"><li>Implement your own scheduler</li></span>
+              <span class="fragment"><li>Implement your own dispatcher in Lua</li></span>
             </ul>
         </section>
 
@@ -685,13 +668,13 @@ function dispatcher (coroutines)
     if next(coroutines) == nil then break end -- no coroutines
 
     for name, co in pairs(coroutines) do
-      local status, res = coroutine.resume(co)
+      local status, result = coroutine.resume(co)
 
-      if res then -- coroutine has exited
+      if result then -- coroutine has exited
 
-        if type(res) == "string" then -- runtime error
+        if type(result) == "string" then -- runtime error
           Actions.Log.critical(
-            "Coroutine '" .. tostring(name) .. "' error " .. res
+            "Coroutine '" .. tostring(name) .. "' error " .. result
           )
         else
           Actions.Log.warn(
@@ -718,22 +701,7 @@ end
         </section>
 
         <section>
-          <h2>Performance</h2>
-            <ul>
-              <span class="fragment"><li>Cavium Octeon ThunderX CN81 NPU @ 1.5Ghz</li></span>
-              <ul>
-                <span class="fragment"><li>4 ARMv8 cores, 78KB I$, 32KB D$, 2MB L2, CCI</li></span>
-              </ul>
-              <span class="fragment"><li>MCM is not compute or IO bound</li></span>
-              <span class="fragment" style="color:yellow"><li>But we do want to minimise event response time</li></span>
-              <ul>
-                <span class="fragment" style="color:yellow"><li>E.g. handover, switching links, decision making</li></span>
-              </ul>
-            </ul>
-        </section>
-
-        <section>
-          <h2>Advice</h2>
+          <h2>Performance Advice</h2>
             <ul>
               <span class="fragment" style="color:yellow"><li>MCM spends a lot of time in the SWIG wrapper</li></span>
               <ul>
@@ -745,7 +713,7 @@ end
               </ul>
               <span class="fragment" style="color:yellow"><li>How the code interacts with Lua is significant</li></span>
               <ul>
-                <span class="fragment"><li>prefer precompiled long-lived behaviours</li></span>
+                <span class="fragment"><li>prefer pre-compiled long-lived behaviours</li></span>
               </ul>
             </ul>
         </section>
