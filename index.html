@@ -71,26 +71,14 @@
           </section>
 
           <section>
-            <h2><a href="http://bluwireless.com/">Blu Wireless</a></h2>
+            <h2><a href="http://bluwireless.com/transport/rail">Blu Wireless</a></h2>
             <ul>
               <span class="fragment"><li>IP networking over 5G mmWave (60 GHz) modems</li></span>
-                <span class="fragment"><ul><li>802.11ad MAC + PHY (Hydra)</li></ul></span>
-              <span class="fragment"><li>Embedded ARM based Cavium (Marvell) NPUs</li></span>
-                <span class="fragment"><ul><li>High specification running Ubuntu 18.04</li></ul></span>
-              <span class="fragment"><li>Multi gigabit wireless links (up-to 1km)</li></span>
-                <span class="fragment"><ul><li>Mobile and Fixed Wireless Applications</ul></span>
-            </ul>
-          </section>
-
-          <section>
-            <h2><a href="http://bluwireless.com/transport/rail/">High Speed Rail</a></h2>
-            <ul>
-              <span class="fragment"><li>High-bandwidth, low latency Internet connectivity</li></span>
-              <span class="fragment"><ul><li>Connection must not drop e.g. in tunnels</ul></span>
-              <span class="fragment"><li>mmWave radios are mounted along the track-side</li></span>
-              <span class="fragment"><ul><li>10Gb fibers provide back-haul to the Internet</li></ul></span>
-              <span class="fragment"><li>mmWave radios are also mounted on the trains</li></span>
-              <span class="fragment"><ul><li>NPUs co-ordinate via on-board wired Ethernet</li></ul></span>
+              <span class="fragment"><ul><li>802.11ad MAC + PHY (Hydra) + software</li></ul></span>
+              <span class="fragment"><li>High-bandwidth, low latency mobile Internet</li></span>
+              <span class="fragment"><ul><li>Up to 3.5Gbps wireless links (up to 1km)</ul></span>
+              <span class="fragment"><li>Embedded quad-core ARMv8 NPUs</li></span>
+              <span class="fragment"><ul><li>Track-side / train-top mmWave radios</li></ul</span>
             </ul>
           </section>
 
@@ -101,10 +89,10 @@
           <section section data-menu-title="Rail Environment Video" data-background-video="media/BluWireless_Rail_Connectivity.mp4"></section>
 
           <section>
-            <h2>Connection Manager</h2>
+            <h2>Connection Management</h2>
             <ul>
               <span class="fragment fade-in">
-                <span class="fragment highlight-yellow"><li>Critical software component</li></span>
+                <span class="fragment highlight-yellow"><li>Mission critical software component</li></span>
               </span>
               <span class="fragment fade-in">
                 <span class="fragment highlight-yellow"><li>Decides which radio to connect to and when</li></span>
@@ -120,17 +108,13 @@
             </ul>
           </section>
 
-          <section data-menu-title="CMv1 Architecture">
-          <img class="stretch" data-src="media/Connection_Manager_Stack.png" style="background:none; border:none; box-shadow:none;">
-          </section>
-
           <section>
             <h2>Observations</h2>
             <ul>
               <span class="fragment"><li>Fixed behaviour was too simplistic</li></span>
               <span class="fragment"><ul><li>RF anomalies led to poor decision making</li></ul></span>
               <span class="fragment"><li>Code could only be extended by Software Engineers</li></span>
-              <span class="fragment"><ul><li>Modifications required C++ expertise</li></ul></span>
+              <span class="fragment"><ul><li>Followed by a test and release cycle</li></ul></span>
               <span class="fragment"><li>Problems were 'worked around' and not 'solved'</li></span>
               <span class="fragment"><ul><li>New requirements could not be accommodated</li></ul></span>
             </ul>
@@ -141,12 +125,11 @@
           <section>
             <h2>Mobile Connection Manager</h2>
             <ul>
-              <span class="fragment"><li>Complete redesign of Connection Manager</li></span>
+              <span class="fragment"><li>Complete redesign</li></span>
               <span class="fragment"><li>Decoupled architecture (C++17 & Lua 5.3.5)</li></span>
               <span class="fragment fade-in" style="color:yellow"><li>Actions (C++17): 'Scan', 'Connect', 'Probe' etc.</li></span>
               <span class="fragment fade-in" style="color:yellow"><li>Behaviours (Lua): sequences of actions</li></span>
-              <span class="fragment fade-in" style="color:yellow"><ul><li>Maximise bandwidth</li></span>
-              <span class="fragment fade-in" style="color:yellow"><li>Implement 'beam choreography'</li></ul></span>
+              <span class="fragment"><li>Implement 'beam choreography' in Lua</li></span>
             </ul>
           </section>
 
