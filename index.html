@@ -97,29 +97,13 @@
               <span class="fragment fade-in">
                 <span class="fragment highlight-yellow"><li>Decides which radio to connect to and when</li></span>
               </span>
-              <span class="fragment"><li>v1.0 implemented simple behaviour:</li></span>
-              <span class="fragment">
-                <ol>
-                  <li>Scan for track-side access points (APs)</li>
-                  <li>Connect to AP with the strongest signal</li>
-                  <li>Wait for disconnection (and go back to 1)</li>
-                </ol>
+              <span class="fragment"><li>v1.0 fixed behaviour: connect to strongest signal</li></span>
+              <span class="fragment"><li>Anomalies led to poor performance</li></span>
+              <span class="fragment"><li>Software updates were costly</li></span>
+              <span class="fragment fade-in">
+                <span class="fragment highlight-yellow"><li>Improvements could not be made fast enough</li></span>
               </span>
             </ul>
-          </section>
-
-          <section>
-            <h2>Observations</h2>
-            <ul>
-              <span class="fragment"><li>Fixed behaviour was too simplistic</li></span>
-              <span class="fragment"><ul><li>RF anomalies led to poor decision making</li></ul></span>
-              <span class="fragment"><li>Code could only be extended by Software Engineers</li></span>
-              <span class="fragment"><ul><li>Followed by a test and release cycle</li></ul></span>
-              <span class="fragment"><li>Problems were 'worked around' and not 'solved'</li></span>
-              <span class="fragment"><ul><li>New requirements could not be accommodated</li></ul></span>
-            </ul>
-            <p>
-            <span class="fragment fade-in" style="color:yellow">Improvements could not be made fast enough</span>
           </section>
 
           <section>
@@ -127,9 +111,10 @@
             <ul>
               <span class="fragment"><li>Complete redesign</li></span>
               <span class="fragment"><li>Decoupled architecture (C++17 & Lua 5.3.5)</li></span>
-              <span class="fragment fade-in" style="color:yellow"><li>Actions (C++17): 'Scan', 'Connect', 'Probe' etc.</li></span>
-              <span class="fragment fade-in" style="color:yellow"><li>Behaviours (Lua): sequences of actions</li></span>
-              <span class="fragment"><li>Implement 'beam choreography' in Lua</li></span>
+              <span class="fragment fade-in" style="color:yellow"><li>Actions (C++): 'Scan', 'Connect', 'Probe' etc.</li></span>
+              <span class="fragment fade-in" style="color:yellow"><li>Behaviours (Lua): implement 'beam choreography'</li></span>
+              <span class="fragment"><li>Changes can be made in the field</li></span>
+              <span class="fragment"><li>Consolidated into supported releases</li></span>
             </ul>
           </section>
 
