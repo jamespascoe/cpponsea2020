@@ -525,24 +525,6 @@ std::string Talk::GetNextMessage(void) {
         </section>
 
         <section>
-          <h2><a href="http://lua-users.org/wiki/MultiTasking">Lua Concurrency</a></h2>
-            <ul>
-              <span class="fragment"><li><a href="https://www.lua.org/pil/9.1.html">Coroutines</a>: Multithreaded C++ and Lua Coroutines</li></span>
-              <span class="fragment"><li><a href="http://lualanes.github.io/lanes/">LuaLanes</a>: OS threads with asynchronous messaging </li></span>
-              <span class="fragment"><li><a href="https://github.com/askyrme/luaproc">luaproc</a>: official tool from Lua development team</li></span>
-              <span class="fragment"><li><a href="https://github.com/effil/effil">Effil</a>: clean API, shared tables, good performance</li></span>
-              <span class="fragment"><li><a href="https://zeromq.org">ZeroMQ</a>: bindings for C++, Lua and FFI (<a href="https://luajit.org">LuaJIT</a>)</li></span>
-              <span class="fragment">
-                <li>
-                  <a href="https://github.com/osch/lua-mtmsg#mtmsg">mtmsg</a> +
-                  <a href="https://github.com/osch/lua-mtstates#mtstates">mtstates</a> +
-                  <a href="https://github.com/osch/lua-mtint#mtint">mtint</a>: building blocks
-                </li>
-              </span>
-            </ul>
-        </section>
-
-        <section>
           <h2>Coroutines</h2>
             <ul>
               <span class="fragment"><li>Great for event-driven asynchronous systems</li></span>
@@ -669,7 +651,25 @@ end
         </section>
 
         <section>
-          <h2>Performance Advice</h2>
+          <h2><a href="http://lua-users.org/wiki/MultiTasking">Lua Concurrency</a></h2>
+            <ul>
+              <span class="fragment"><li><a href="https://www.lua.org/pil/9.1.html">Coroutines</a>: Multithreaded C++ and Lua Coroutines</li></span>
+              <span class="fragment"><li><a href="http://lualanes.github.io/lanes/">LuaLanes</a>: OS threads with asynchronous messaging </li></span>
+              <span class="fragment"><li><a href="https://github.com/askyrme/luaproc">luaproc</a>: official tool from Lua development team</li></span>
+              <span class="fragment"><li><a href="https://github.com/effil/effil">Effil</a>: clean API, shared tables, good performance</li></span>
+              <span class="fragment"><li><a href="https://zeromq.org">ZeroMQ</a>: bindings for C++, Lua and FFI (<a href="https://luajit.org">LuaJIT</a>)</li></span>
+              <span class="fragment">
+                <li>
+                  <a href="https://github.com/osch/lua-mtmsg#mtmsg">mtmsg</a> +
+                  <a href="https://github.com/osch/lua-mtstates#mtstates">mtstates</a> +
+                  <a href="https://github.com/osch/lua-mtint#mtint">mtint</a>: building blocks
+                </li>
+              </span>
+            </ul>
+        </section>
+
+        <section>
+          <h2>Performance</h2>
             <ul>
               <span class="fragment" style="color:yellow"><li>MCM spends a lot of time in the SWIG wrapper</li></span>
               <ul>
