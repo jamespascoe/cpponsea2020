@@ -113,7 +113,7 @@
               <span class="fragment"><li>Decoupled architecture (C++17 & Lua 5.3.5)</li></span>
               <span class="fragment fade-in" style="color:yellow"><li>Actions (C++): 'Scan', 'Connect', 'Probe' etc.</li></span>
               <span class="fragment fade-in" style="color:yellow"><li>Behaviours (Lua): implement 'beam choreography'</li></span>
-              <span class="fragment"><li>Changes can be made in the field</li></span>
+              <span class="fragment fade-in" style="color:yellow"><li>Changes can be made in the field by FAEs</li></span>
               <span class="fragment"><li>Consolidated into supported releases</li></span>
             </ul>
           </section>
@@ -157,7 +157,7 @@
 
           <section>
             <h2>Simple Example: Lua</h2>
-            <pre><code class="stretch lua" data-trim data-line-numbers="|1-2|5-16|11-12|">
+            <pre><code class="stretch lua" data-trim data-line-numbers="|1-2|4-15|11-12|">
 -- Create a global table 't'
 t = { x=1, y=2 }
 
@@ -178,7 +178,7 @@ end
 
           <section>
             <h2>Simple Example: C++</h2>
-            <pre class="stretch"><code class="c++" style="width:103%" data-trim data-line-numbers="">
+            <pre class="stretch"><code class="c++" style="width:103%" data-trim data-line-numbers="|4-11|15-26|28-35|">
 #include &ltiostream&gt
 #include "lua5.3/lua.hpp"
 
