@@ -359,7 +359,7 @@ target_link_libraries(actions PRIVATE std::filesystem)
 
           <section>
             <h2><a href="https://gist.github.com/jamespascoe/523a5cf4114a1230b4d8a386bb8cd8ba">Lua Callback: SWIG Typemap</a></h2>
-            <pre class="stretch"><code class="" data-trim data-line-numbers="">
+            <pre class="stretch"><code class="" data-trim data-line-numbers="|1-3|5-17|19|">
 %typemap(typecheck) Example::Callback & {
   $1 = lua_isfunction(L, $input);
 }
@@ -475,6 +475,33 @@ void Talk::start_accept() {
           </section>
 
           <section>
+            <h2>Accepting Connections</h2>
+            </code></pre>
+            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|6-15|19|">
+void Talk::handle_accept(tcp_connection::pointer connection,
+                         asio::error_code const& error) {
+  if (!error) {
+    log_debug("Accepted message connection");
+
+    asio::async_read(
+      connection-&gtsocket(),
+      asio::dynamic_buffer(connection-&gtdata()),
+      [this, connection](
+        const asio::error_code& error,
+        std::size_t bytes_transferred)
+        {
+          handle_read(error, bytes_transferred, connection);
+        }
+    );
+  } else
+    log_error("Talk accept failed: {}", error.message());
+
+  start_accept();
+}
+            </code></pre>
+          </section>
+
+          <section>
             <h2>Storing Data</h2>
             </code></pre>
             <pre class="stretch"><code class="c++" data-trim data-line-numbers="|4-5|7-12|">
@@ -547,7 +574,7 @@ std::string Talk::GetNextMessage(void) {
 
         <section>
             <h2>Sender Coroutine</h2>
-            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|5|10-12|24|">
+            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|5|5-12|14-19|24|">
 function sender (talk, host, port)
 
   while true do
@@ -651,24 +678,6 @@ end
         </section>
 
         <section>
-          <h2><a href="http://lua-users.org/wiki/MultiTasking">Lua Concurrency</a></h2>
-            <ul>
-              <span class="fragment"><li><a href="https://www.lua.org/pil/9.1.html">Coroutines</a>: Multithreaded C++ and Lua Coroutines</li></span>
-              <span class="fragment"><li><a href="http://lualanes.github.io/lanes/">LuaLanes</a>: OS threads with asynchronous messaging </li></span>
-              <span class="fragment"><li><a href="https://github.com/askyrme/luaproc">luaproc</a>: official tool from Lua development team</li></span>
-              <span class="fragment"><li><a href="https://github.com/effil/effil">Effil</a>: clean API, shared tables, good performance</li></span>
-              <span class="fragment"><li><a href="https://zeromq.org">ZeroMQ</a>: bindings for C++, Lua and FFI (<a href="https://luajit.org">LuaJIT</a>)</li></span>
-              <span class="fragment">
-                <li>
-                  <a href="https://github.com/osch/lua-mtmsg#mtmsg">mtmsg</a> +
-                  <a href="https://github.com/osch/lua-mtstates#mtstates">mtstates</a> +
-                  <a href="https://github.com/osch/lua-mtint#mtint">mtint</a>: building blocks
-                </li>
-              </span>
-            </ul>
-        </section>
-
-        <section>
           <h2>Performance</h2>
             <ul>
               <span class="fragment" style="color:yellow"><li>MCM spends a lot of time in the SWIG wrapper</li></span>
@@ -689,11 +698,11 @@ end
         <section>
           <h2>Conclusion</h2>
             <ul>
-              <span class="fragment" style="color:yellow"><li>The combination of C++17/20 and Lua is powerful</li></span>
+              <span class="fragment" style="color:yellow"><li>The combination of C++20 and Lua is powerful</li></span>
               <ul>
                 <span class="fragment"><li>Actions (C++) and Behaviours (Lua)</li></span>
               </ul>
-              <span class="fragment" style="color:yellow"><li>SWIG allows us to map C++17/20 types to/from Lua</li></span>
+              <span class="fragment" style="color:yellow"><li>SWIG allows us to map C++20 types to/from Lua</li></span>
               <ul>
                 <span class="fragment"><li>std::any, std::optional, std::variant</li></span>
                 <span class="fragment"><li>be mindful of performance</li></span>
