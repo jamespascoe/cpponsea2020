@@ -426,9 +426,9 @@ target_link_libraries(actions PRIVATE std::filesystem)
             <h2><a href="http://think-async.com/Asio/asio-1.12.2/doc/asio/tutorial/tutdaytime3.html#asio.tutorial.tutdaytime3.the_tcp_connection_class">TCP Connections</a></h2>
 
             </code></pre>
-            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|1-2|4-8,15-16|10-12,18-19|">
+            <pre class="stretch"><code class="c++" data-trim data-line-numbers="|4-8,15-16|10-12,18-19|">
 class tcp_connection
-  : public std::enable_shared_from_this&lttcp_connection&gt {
+{
 public:
   using pointer = std::shared_ptr&lttcp_connection&gt;
 
