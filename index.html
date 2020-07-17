@@ -579,7 +579,7 @@ std::string Talk::GetNextMessage(void) {
 
         <section>
             <h2>Sender Coroutine</h2>
-            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|5|5-12|14-19|24|">
+            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|5|5-12|14-20|24|">
 function sender (talk, host, port)
 
   while true do
@@ -641,7 +641,7 @@ end
 
           <section>
             <h2><a href="https://www.lua.org/pil/9.4.html">Dispatcher</a></h2>
-            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|3|8-9|11-24|27|">
+            <pre class="stretch"><code class="lua" data-trim data-line-numbers="|3|6|8-9|11-24|27|">
 function dispatcher (coroutines)
 
   local timer = Actions.Timer()
@@ -703,7 +703,7 @@ end
         <section>
           <h2>Conclusion</h2>
             <ul>
-              <span class="fragment" style="color:yellow"><li>The combination of C++20 and Lua is powerful</li></span>
+              <span class="fragment" style="color:yellow"><li>The combination of C++ and Lua is powerful</li></span>
               <ul>
                 <span class="fragment"><li>Actions (C++) and Behaviours (Lua)</li></span>
               </ul>
