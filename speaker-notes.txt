@@ -1,0 +1,211 @@
+CPP On Sea Slides
+
+Combining Modern C++ and Lua
+
+Hello, good morning - my name is Jim Pascoe and Welcome to my talk on Combining Modern C++ and Lua.
+
+A few items to note - the slides are online and this is the URL, so if you want to follow along from the comfort of your own browser then please do so. You can change the theme by clicking on the hamburger icon. Also, I’ve linked to relevant sources of further information, so do click around. And, this is the GitHub link for the example code which accompanies the talk. More about that later. I will pause at points to answer questions - but if you want to interrupt, to ask something, then please do, its possibly a bit more natural that way.
+
+Overview
+
+We are going to start by talking about software flexibility and the motivation for this technique. As part of that we are going to look at a real-world example of where combining C++ and Lua is useful. And I think it helps to have some idea of why you might want to deploy this technique in mind as we progress. Next, we are going to discuss all the juicy details of how to actually combine C++ and Lua and this section will include lots of examples, including a C++/Lua starter project called LuaChat. As part of that we will talk about concurrency and asynchrony (two of my favourite topics) before we get down to performance considerations and the conclusion.
+
+So, we are going to start with Software Philosophy and we are going to deep-dive through the layers to end up talking about I$, D$ and L2s.
+
+Flexibility
+
+Question. What does it mean for Software to be Flexible? Rather than hear only my ideas on this topic please do comment in the chat window. What immediately comes to mind when we discuss software flexibility? Portability, software that evolves well over time and this ties into what Titus Winters is talking about when he distinguishes programming from software engineering. Easy to change? Behaviour is adaptable? Copes with future unknowns and this is really where I am going with this. My personal experience is that a lot of software is written by some up-front requirements analysis and then the software team essentially react to anything that differs from that. And what this talk is about is how can we approach that better, rather than react, lets say what is likely to happen in the future and how can we cope with that uncertainty.
+
+High Speed Rail
+
+Lets go through a real-world example of how this technique might be useful. When you see a slide like this, we will pause for questions.
+
+Mention Phil’s Joke
+
+Blu Wireless
+
+Originally an IP licensing company (which built an 802.11ad MAC, PHY and software stack), now a product company. What Blu Wireless does is to provide high bandwidth IP networking across long range wireless links for a range of markets - one of which is high speed mobility, so trains, racers etc. It’s important to note that by embedded, I am really referring to high-end embedded systems - i.e. the NPUs are quad-core ARMv8s, clocked at 1.2Ghz with gigabytes of DDR, running desktop Linux. So, they are not small microcontrollers.
+
+Blu Wireless Units
+
+This is what the units look like. So, you can see the train top unit which would sit on the roof of a train. Typically, there would be two of these per train (front and rear) but there may be more in the train is particularly long. The ‘in train’ units are the NPUs and are mounted in the roof space of a carriage and connect into the on-board Ethernet. Typically, a Customer Connection Unit communicates with the in-train unit to determine if the link is up (or not).
+
+The track-side units are mounted on poles on the side of the track at a spacing of about 1km and send data via a 10Gb Ethernet fibre to a router in the station and then on to the Internet.
+
+Video
+
+I going to show a short 40 second video, which I think illustrates the application quite well. There are a few things to notice: 1) train is moving quickly, 2) there is a lot of variation in the environment: reflective surfaces, weather, terrain, tunnels, stations, 3) this notion of ‘beam choreography’, that is, the sequencing of connections, disconnection and hangovers.
+
+Connection Management
+
+The Connection Manager is a mission critical piece of software that implements the beam choreography. The first version (I didn’t write this) was a monolithic C++98 application, but by all measures was done well. Over its lifetime, there were very few bugs and it took us from having nothing to having something. So, v1 implemented a simple behaviour, that is, connect to the strongest signal and hold on to that connection until the MAC tells us we’ve been disconnected. And that worked of a fashion, but geographic anomalies, RF anomalies meant that the Connection Manager would often make the wrong decision, that is, connect to the wrong access point - and those mistakes are costly, because you have network reconfiguration involved.
+
+The other key drawback was that making changes to the Connection Manager’s behaviour was difficult. So everything time an FAE or a Technical Manager wanted to explore a hypothesis or test an idea, we (i.e. the software team) had to go through a complete: design, implement, test, deploy cycle which a) takes a long time and b) has to then involve the customer (because you cant change software on trains at will). So, improvements could not be made fast enough and this really is the crux of it, in that we couldn’t reflect our learning in the code fast enough.
+
+Mobile Connection Manager
+
+So, we completely redesigned our approach to connection management - the result being Mobile Connection Manager (or MCM). The key feature of MCM is the split between C++ and Lua. Actions encapsulate capabilities and I tend to name them as if they were commands, so you have Scan, Connect, Probe but you could have GPS, Influx (for sending data to an InfluxDB) or SNMP. Actions are implemented in C++ and do the heavy-lifting.
+
+Behaviours use the Actions library as primitives and express the details of when and how to handover. The key benefit of this is that changes can be made in the field - you don’t need a compilation environment or a deployment cycle - I can just use vim on the unit to modify the behaviour, restart the service and its running. Plus, customers are far more open to this type of change - the chances of bricking the unit are zero and you can restore the original behaviour in seconds. So, we consolidate the learning into supported monthly releases.
+
+MCM Architecture
+
+Here is the MCM architecture. The Lua behaviour is at the top, so closest to the user, then the MCM Main files which are implemented in C++ and glue the application together. Then we’ve got a SWIG wrapper, so a hint at whats coming up and this interfaces to our library of Actions. The Actions use various APIs which interact with the Linux driver and the kernel before ultimately being passed to the MAC, PHY and the Radio.
+
+Combining Modern C++ and Lua
+
+Any questions?
+
+Lua
+
+What is it? It’s a lightweight very embeddable scripting language. It’s dynamically typed and runs on byte code, though you can precompile code and there are excellent JIT engines available. It has a simple syntax with an emphasis on meta-mechanisms and this is the reason that the interpreter is so small - in fact, IIRC the Lua interpreter compiles down to 280KB on Intel with an O3 build (and its about another 450KB for the libraries), so it will easily fit in L2. The key data abstraction in Lua is the ‘table’ which is a ‘map’ or associative array and when we talk about meta-mechanisms in Lua, then this is the prime example, that is, you can build any other data structure from tables e.g. arrays, trees etc.
+
+The Lua Stack
+
+Lua registry - regular Lua table, but global, so all C++ libraries share the same registry, which means that you have to be careful to avoid collisions.
+
+Up values - they are like static variables in C++ which are visible only in a particular function. The association of a C++ function to its upvalues is a closure (in Lua parlance).
+
+First Example: Lua
+
+(Clickthroughs x 3)
+
+This is an example of how to call a Lua function from C++ and how to call C++ from Lua. Lets start with the Lua code and by the way, these examples are all compilable and runnable. If you cut-and-paste these examples off of the slide into files, you should be able to get them running with very little effort (I’ve got some build and run instructions coming up). We create a table and define a function ‘f’ which prints out its arguments and calls a C++ function. Note that this code wont do anything if we run it in the Lua interpreter - we are simply defining ‘t’ and ‘f’.
+
+First Example: C++
+
+(Clickthroughs x 3)
+
+Here is the C++. Here is cppFunc - and all we are doing here is printing the contents of the Lua stack (bottom up). The next section is initialisation. We create a lua_State, which is an execution state and is passed around everywhere, we open the standard libraries, register cppFunc in the Lua namespace, load a file of Lua from the command line and calls the interpreter in protected mode. Protected mode means that errors are caught. The 0 relates to a stack index where you can pass an error handling function.
+
+Now, lets call a Lua function.
+
+<explain stack calls>
+
+First Example: Build and Run
+
+(Clickthroughs x 2)
+
+<explain build instructions>
+
+LuaChat
+
+So hopefully that has given you some idea of how the low-level Lua to C++ interactions work and certainly, when you start looking at SWIG wrappers, an understanding of how the Lua stack operates is vital.
+
+Lets step forward and look at some Modern C++. What I have done is to create a ‘starter’ application called LuaChat which you can clone from my GitHub and use as the basis for your own combined C++ and Lua projects. Jason Turner, who was here last year, published a C++ starter project a while ago that was very popular, so I thought I would do something similar for C++ and Lua.
+
+<explain bullet points>
+
+LuaChat Architectural Diagram
+
+<explain diagram>
+
+Mention that we will discuss the LuaChat behaviour, the SWIG input files and the Talk action in detail.
+
+Build Instructions
+
+Here are the build instructions. You should be able to cut-and-paste this off of the slide.
+I’ve tested this on a few machines. When you run this, LuaChat should print usage. I am very happy to receive bug reports.
+
+SWIG
+
+Lets look at these SWIG wrappers I keep mentioning. The stack operations that we saw in the ‘First Example’ are (to my mind) primitives, which in the context of Modern C++ you don’t necessarily want to manipulate directly. What we need is an abstraction and SWIG is a tool which provides that.
+
+<explain bullets>
+
+LuaChat SWIG CMake
+
+(Clickthroughs x 2)
+
+This is one possible integration of SWIG into CMake. The two things to mention here are: i) this is where you pass the SWIG input file and ii) this is where you select the target language. One nice feature is that you can generate bindings in multiple languages, for example, you can create a set of bindings for Lua to implement behaviours and you can create another set (say in Python) for integration in a test bench.
+
+LuaChat SWIG Input
+
+(Clickthroughs x 6)
+
+Lets briefly look at the SWIG input file. SWIG has its own input format so a little bit of explanation here is helpful. Typically the first line of the file is the name of the module and this the name by which the library will be available in the target language, so we’ll see in a minute that there are lots of references to Actions.Talk, Actions.Timer and Actions.Log in the Lua. Next, we include support for std::string, so SWIG will just map std::string to Lua strings and vice-versa. There are analogous includes for std::vector, map etc. The next part is a piece of code that is inserted into the SWIG wrapper, so, bear in mind that what SWIG is doing is scanning your code and then generating a C++ wrapper (which binds your code to the target language) and that wrapper is then compiled. So anything code you need to make that wrapper compile should go here.
+
+Then we include the files to scan (so the logging header) and then I am defining a macro which will wrap a function in a try-catch block and direct any exceptions to the logger.The only place where exceptions are used are in the constructors for the Actions (and those are instantiated on startup).
+
+Typemaps
+
+In the previous slide we saw how SWIG supports standard C++ types, but what about user defined types or types defined in C++20. The good news is that we can add support for such types in the form of typemaps, which as their name suggests, maps types in C++ to the target language.
+
+So, lets have an example. If you start working with combinations of C++ and Lua, one of the first things people want to do is to be able to map std::function onto Lua functions and vice-versa. And this is useful for things like callbacks. So, the next example shows how we can do this.
+
+And brief acknowledgement to Petar who provided the original version of this example, which I then hacked to fit on the slide and he pointed out the bug I had introduced.
+
+Lua Callback: SWIG Typemap
+
+So the first thing to point out is that if you go to my GitHub (or click the slide’s title) then you will find a GitHub gist with a complete and build able version of this example plus instructions on how to compile and run this code.
+
+In the GitHub gist, Example::Callback is a type alias to std::function<void(void)>. The rule on line 1-3 is a typecheck rule. This allows SWIG to check the type of anything that is passed as a candidate for conversion to an Example::Callback.
+
+Lets look at lines 5-17.
+
+<explain code>
+
+The way to understand how this works is to flip between the SWIG input file and the wrapper. It’s a bit like when your optimising code and you flipping between the source and the assembly (although these days we just use Compiler Explorer - which is a fabulous tool).
+
+(Line 19) One thing to note is to %include your files after the typemaps have been defined. If you %include them before you define the typemap, nothing happens.
+
+Actions
+
+LuaChat Actions
+
+<click through and explain>
+
+TCP Connections
+
+The key issue with asynchronous TCP connections is lifetime management i.e. knowing when they can be closed. The talk Action is based on code from the Boost ASIO documentation and the reason for this is because it gives a nice approach to managing TCP connections.
+
+So, we have a class to encapsulate a TCP connection and a std::string, which is going to contain the either the message that we want to send, or the message we have received. Then we have this factory style creation function combined with a private constructor, which initialises the socket with an io_context, which is like an executor.
+
+And finally we have some getters for the socket and a mutable reference to the actual data.
+
+Connection Handling
+
+Accepting Connections
+
+Storing Data
+
+Lua Retrieval
+
+<explain code>
+
+Behaviour
+
+Any questions?
+
+Coroutines
+
+I really like coroutines. For me, they are most useful when trying to make use of latency in a thread. If you are looking at a thread body, with some blocking operation in it and you are thinking that there is another part of the thread that could do useful work, then coroutines are great.
+
+Lua coroutines are stackful, meaning that each coroutine is allocated a full execution stack. So similar to Boost.Coroutine (sometimes called fibers) - the benefit being that stackful coroutines can be suspended anywhere (so not just in the top routine). That said, stackful coroutines are memory intensive and not particularly scalable.
+
+C++20 coroutines are stackless by comparison which means that they don’t get a full execution stack as such, but they have much smaller memory requirements and this makes them extremely scalable. So, on a desktop machine, you millions even possibly billions of stackless coroutines. The often cited drawback is that you can only suspend and resume a stackless coroutine from its top level function, though there are ways and means of mitigating that.
+
+The other key benefit of stackless coroutines is that context switching is much faster. Gor Nishanov wrote an excellent wg21 paper on this. In fact, if you want to really understand coroutines, I would highly recommend reading through Gor’s wg21 papers (particularly, N3985 and N4402), starting around 2014 and work forward. That and the CppCon talks are the best sources of information on C++20 Coroutines that I have found.
+
+LuaChat Behaviour
+
+Sender Coroutine
+
+Receiver Coroutine
+
+Dispatcher
+
+<explain code>
+
+Conclusion
+
+Performance
+
+I just want to briefly talk about performance. So, given that these NPUs are like desktop machines, you can run perf on them. For the MCM, were not compute or I/O bound (certainly not doing anything to the traffic). The thing we are interested in profiling is responsivity to events - so things like handover time and the disruption to the users traffic.
+And that really has a commercial dimension, because if the first question from a customer ‘is what bandwidth do you support and at what range?’, the second is ‘what is the handover time?’.
+
+So, we did some profiling and the were some interesting insights that I want to share with you.
+
+Conclusion
+
+Questions
