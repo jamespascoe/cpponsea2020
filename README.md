@@ -11,4 +11,3 @@ framework.
 [![Combining Modern_C++ And Lua](media/Combining_Modern_C++_And_Lua.png)](http://jamespascoe.github.io/cpponsea2020)
 [![LuaChat Example Code](media/Lua_Chat_Logo.png)](http://github.com/jamespascoe/LuaChat.git)
 [![GitHub Gist for SWIG Callback Example](media/Octocat.png)](https://gist.github.com/jamespascoe/523a5cf4114a1230b4d8a386bb8cd8ba)
-[![James Pascoe](media/LI-In-Bug.png)](http://www.james-pascoe.com)
